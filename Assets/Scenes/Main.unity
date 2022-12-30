@@ -2911,11 +2911,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 226db415a9a76ba46b01fb7c4c537d3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementInput: {x: 0, y: 0}
   speed: 5
-  rb2D: {fileID: 958443451}
   attacking: 0
+  movementInput: {x: 0, y: 0}
   animator: {fileID: 958443448}
+  rb2D: {fileID: 958443451}
+  snowball: {fileID: 7795113654954870273, guid: 99803938f2c922e4e97ee7184bdd84cd, type: 3}
 --- !u!1 &1805469329
 GameObject:
   m_ObjectHideFlags: 0
