@@ -5,7 +5,7 @@ using UnityEngine;
 public class playerControl : MonoBehaviour
 {
     public float speed = 5;
-    public bool attacking;
+    public bool baseAttackPressed;
     public Vector2 movementInput;
     public Vector3 snowballDistance;
     public Animator animator;
@@ -17,36 +17,35 @@ public class playerControl : MonoBehaviour
     }
     void Update()
     {
-        //Input is collected and set to our variable every frame Input in this case is also a class just like this scripts 'TopDown2DMovement' script
+        //Input is collected and set to our variable every frame Input in this case is class
 
         /*
-        Input.GetAxisRaw(string "axis") is a method 
-        that gives us a value = to the inputed axis
-        basically if the player presses the right arrow 
-        or pushes a joystick right, this returns the value 1
-        if instead it was left, then it would return -1
-        if its inbetween(when your using a joystick this can happen)
-        it returns a value inbetween -1 and 1 depending on its direction
+
         */
         movementInput.x = Input.GetAxisRaw("Horizontal");
         movementInput.y = Input.GetAxisRaw("Vertical");
 
         /*
-        Input.GetButtonDown(string "button") is a method that returns a bool
-        true if the button is currently bieng held down on this frame
-        false if it isnt
+        Input.GetButton(string "button") is a method that returns a bool value
+        this value is true if the button is currently bieng held down
+        and this value is false if it isnt
         */
-        attacking = Input.GetButtonDown("Fire3");
+        baseAttackPressed = Input.GetButton("Fire3");
+        //NOTE: will change "Fire3" to right click mouse button later
 
         animator.SetFloat("XInput", movementInput.x);
         animator.SetFloat("YInput", movementInput.y);
         animator.SetFloat("speed", movementInput.sqrMagnitude);
-        animator.SetBool("attacking", attacking);
-        if (attacking)
+        animator.SetBool("attacking", baseAttackPressed);
+        if (Input.GetButtonDown("Fire3"))
         {
-            startAttack("base");
+            StartCoroutine(startAttack("base"));
         }
-        snowballDistance = new Vector3(movementInput.x, movementInput.y, 0);
+        if (Input.GetButtonUp("Fire3"))
+        {
+            StopCoroutine(startAttack("base"));
+        }
+        snowballDistance = new Vector3(0.1f + movementInput.x * 0.1f, 0.1f + movementInput.y * 0.1f, 0);
     }
 
     // Update is called once per frame
@@ -54,22 +53,36 @@ public class playerControl : MonoBehaviour
     {
         rb2D.MovePosition(rb2D.position + movementInput * speed * Time.fixedDeltaTime);
     }
-    void startAttack(string attack)
+    IEnumerator startAttack(string attack)
     {
 
         switch (attack)
         {
             case "base":
+                float currentTime = 0f;
                 //BASE ATTACK TODO
-                //start transition animation
+                //start 'basic attack charge' animation
+                //start attackTimer
+                //
+                //create 'bullet'
                 var baseSnowball = Instantiate(snowball, this.transform);
-                //grow 'bullet'
+                //place bullet in the direction the player is moving
                 baseSnowball.transform.position = this.transform.position + snowballDistance;
-                baseSnowball.transform.localScale += new Vector3 (Time.deltaTime, Time.deltaTime, 0);
+                //grow 'bullet'
+                Vector3 scaleO = baseSnowball.transform.localScale;
+                Vector3 maxSize = new Vector3(.75f, .75f, 0);
+                while (currentTime <= Time.time && baseAttackPressed)
+                {
+                    baseSnowball.transform.localScale = Vector3.Lerp(scaleO, maxSize, currentTime / Time.time);
+                    currentTime += Time.deltaTime;
+                    yield return null;
+                }
                 //stop 'bullet' growth on player input or at certain size
+
                 //start new attack holding animation
                 //on player input release 'bullet' in direction player is moving
                 //delete 'bullet' after a set time or/and on collision
+
                 break;
             case "attack2":
                 break;
@@ -80,6 +93,6 @@ public class playerControl : MonoBehaviour
             case "attack5":
                 break;
         }
-
+        yield break;
     }
 }

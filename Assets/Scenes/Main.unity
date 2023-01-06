@@ -2912,8 +2912,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  attacking: 0
+  baseAttackPressed: 0
   movementInput: {x: 0, y: 0}
+  snowballDistance: {x: 0, y: 0, z: 0}
   animator: {fileID: 958443448}
   rb2D: {fileID: 958443451}
   snowball: {fileID: 7795113654954870273, guid: 99803938f2c922e4e97ee7184bdd84cd, type: 3}
