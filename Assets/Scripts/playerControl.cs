@@ -22,6 +22,7 @@ public class playerControl : MonoBehaviour
         /*
 
         */
+        
         movementInput.x = Input.GetAxisRaw("Horizontal");
         movementInput.y = Input.GetAxisRaw("Vertical");
 
@@ -59,6 +60,10 @@ public class playerControl : MonoBehaviour
         switch (attack)
         {
             case "base":
+                if (GameObject.Find("snowball") )
+                {
+
+                }
                 float currentTime = 0f;
                 //BASE ATTACK TODO
                 //start 'basic attack charge' animation
@@ -69,18 +74,20 @@ public class playerControl : MonoBehaviour
                 //place bullet in the direction the player is moving
                 baseSnowball.transform.position = this.transform.position + snowballDistance;
                 //grow 'bullet'
+                //stop 'bullet' growth on player input or at certain size
                 Vector3 scaleO = baseSnowball.transform.localScale;
-                Vector3 maxSize = new Vector3(.75f, .75f, 0);
+                Vector3 maxSize = new Vector3(.5f, .5f, 0);
                 while (currentTime <= Time.time && baseAttackPressed)
                 {
                     baseSnowball.transform.localScale = Vector3.Lerp(scaleO, maxSize, currentTime / Time.time);
                     currentTime += Time.deltaTime;
                     yield return null;
                 }
-                //stop 'bullet' growth on player input or at certain size
-
+                baseSnowball.transform.position = this.transform.position + new Vector3(0,.5f);
                 //start new attack holding animation
                 //on player input release 'bullet' in direction player is moving
+                Rigidbody2D snowballrb = baseSnowball.GetComponent<Rigidbody2D>();
+                snowballrb.velocity += movementInput;
                 //delete 'bullet' after a set time or/and on collision
 
                 break;
