@@ -8,4 +8,5 @@ public class waves : MonoBehaviour
     public int enemyLimit;
     public float spawnInterval;
     public GameObject enemy;
+    public float waitTime;
 }
