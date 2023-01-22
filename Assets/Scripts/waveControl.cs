@@ -8,10 +8,11 @@ public class waveControl : MonoBehaviour
     public waveState currentWaveState = waveState.waiting;
     public waves[] waves_;
     IEnumerator waveSpawner() {
-        if (waveState == waveState.waiting) { 
-        Debug.Log("Wait for 10 seconds")
-        yield return new WaitForSeconds(waves_.waitTime);
-        currentWaveState = waveState.spawning;
+        if (currentWaveState == waveState.waiting)
+        {
+            Debug.Log("Wait for 10 seconds");
+            yield return new WaitForSeconds(waves_.waitTime);
+            currentWaveState = waveState.spawning;
         }
     }
     // Start is called before the first frame update
