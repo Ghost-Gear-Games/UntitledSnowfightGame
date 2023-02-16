@@ -3322,12 +3322,16 @@ MonoBehaviour:
   - enemyCount: 0
     enemyLimit: 0
     spawnInterval: 0
-    enemyArray: []
+    enemy: {fileID: 0}
     waitTime: 0
+<<<<<<< HEAD
   enemy: {fileID: 6162967967538041313, guid: e67eb3d7c61e4964b9cf1d6ff7b04d9a, type: 3}
   enemyFast: {fileID: 6191417496686653763, guid: 75cafe6f8c1d236439768b8fea461a89, type: 3}
   enemySlow: {fileID: 2648205284649029289, guid: 83ce412056134f645825d5acc9c61d18, type: 3}
 >>>>>>> 45b106825786fcfc81bea2e30c26a81681d6119f
+=======
+  enemy1: {fileID: 6162967967538041313, guid: e67eb3d7c61e4964b9cf1d6ff7b04d9a, type: 3}
+>>>>>>> parent of 45b1068 (Update Main.unity)
 --- !u!4 &1920407171
 Transform:
   m_ObjectHideFlags: 0
