@@ -7,17 +7,15 @@ public class waveControl : MonoBehaviour
     public enum waveState { waiting, spawning }
     public waveState currentWaveState = waveState.waiting;
     public int currentWave = 0;
-    public wave[] waves_;
-    public GameObject enemy;
-    public GameObject enemyFast;
-    public GameObject enemySlow;
+    public waveList[] waves_;
+    public GameObject enemy1;
     [System.Serializable]
-    public class wave
+    public class waveList
     {
         public int enemyCount;
         public int enemyLimit;
         public float spawnInterval;
-        public GameObject[] enemyArray;
+        public GameObject enemy;
         public float waitTime;
     }
     IEnumerator waveSpawner()
@@ -33,7 +31,7 @@ public class waveControl : MonoBehaviour
             for (int i = 0; i < waves_[currentWave].enemyLimit; i++)
             {
                 waves_[currentWave].enemyCount++;
-                Instantiate(enemy);
+                Instantiate(enemy1);
                 currentWave += 1;
             }
 
@@ -48,15 +46,6 @@ public class waveControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(currentWaveState == waveState.waiting)
-        {
-            StartCoroutine(waveSpawner());
-        }
-    }
-    void CreateWave(wave[] waveArray)
-    {
-         waveArray[0] = new wave();
-        
-    }
 
+    }
 }
