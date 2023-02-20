@@ -10,7 +10,9 @@ public class playerControl : MonoBehaviour
     public Vector3 snowballDistance;
     public Animator animator;
     public Rigidbody2D rb2D;
-    public GameObject snowball;
+    public attackManager.snowball snowball;
+    public attackManager.yellowSnowball yellowSnowball;
+    public attackManager.slush slush;
     private void Start()
     {
 
@@ -22,7 +24,7 @@ public class playerControl : MonoBehaviour
         /*
 
         */
-        
+
         movementInput.x = Input.GetAxisRaw("Horizontal");
         movementInput.y = Input.GetAxisRaw("Vertical");
 
@@ -60,44 +62,41 @@ public class playerControl : MonoBehaviour
         switch (attack)
         {
             case "base":
-                if (GameObject.Find("snowball") )
-                {
-
-                }
-                float currentTime = 0f;
-                //BASE ATTACK TODO
+                //BASE ATTACK OLD
+                  float rateOfGrowth = 0f;
                 //start 'basic attack charge' animation
                 //start attackTimer
                 //
                 //create 'bullet'
-                var baseSnowball = Instantiate(snowball, this.transform);
+                var baseSnowball = Instantiate(snowball.snowballPrefab, this.transform);
                 //place bullet in the direction the player is moving
                 baseSnowball.transform.position = this.transform.position + snowballDistance;
                 //grow 'bullet'
                 //stop 'bullet' growth on player input or at certain size
                 Vector3 scaleO = baseSnowball.transform.localScale;
                 Vector3 maxSize = new Vector3(.5f, .5f, 0);
-                while (currentTime <= Time.time && baseAttackPressed)
+                while (baseAttackPressed && baseSnowball.transform.localScale != maxSize)
                 {
-                    baseSnowball.transform.localScale = Vector3.Lerp(scaleO, maxSize, currentTime / Time.time);
-                    currentTime += Time.deltaTime;
+                    baseSnowball.transform.localScale = Vector3.Lerp(scaleO, maxSize, rateOfGrowth);
+                    baseSnowball.transform.position = this.transform.position + snowballDistance;
+                    snowball.size = baseSnowball.transform.localScale;
+                    snowball.damage = baseSnowball.transform.localScale.x * 10;
+                    rateOfGrowth += 0.005f;
                     yield return null;
                 }
+                rateOfGrowth = 0;
                 baseSnowball.transform.position = this.transform.position + new Vector3(0,.5f);
                 //start new attack holding animation
                 //on player input release 'bullet' in direction player is moving
                 Rigidbody2D snowballrb = baseSnowball.GetComponent<Rigidbody2D>();
-                snowballrb.velocity += movementInput;
+                snowballrb.velocity += 2 * (movementInput + new Vector2(0.1f, 0.1f));
                 //delete 'bullet' after a set time or/and on collision
+                
 
                 break;
             case "attack2":
                 break;
             case "attack3":
-                break;
-            case "attack4":
-                break;
-            case "attack5":
                 break;
         }
         yield break;
