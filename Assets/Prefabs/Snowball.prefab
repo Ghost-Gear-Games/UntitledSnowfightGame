@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3117946779016677968}
   - component: {fileID: 1037260648144165130}
   m_Layer: 0
-  m_Name: placeholderSnowball
+  m_Name: Snowball
   m_TagString: playerAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
