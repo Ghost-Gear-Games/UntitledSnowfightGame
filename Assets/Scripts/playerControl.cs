@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class playerControl : MonoBehaviour
 {
@@ -13,6 +14,11 @@ public class playerControl : MonoBehaviour
     public attackManager.snowball snowball;
     public attackManager.yellowSnowball yellowSnowball;
     public attackManager.slush slush;
+
+    public PlayerInputActions playerControls;
+    public InputAction move;
+    public InputAction fire;
+    public Vector2 moveInput = Vector2.zero;
     private void Start()
     {
 
@@ -27,6 +33,7 @@ public class playerControl : MonoBehaviour
 
         movementInput.x = Input.GetAxisRaw("Horizontal");
         movementInput.y = Input.GetAxisRaw("Vertical");
+        moveInput = move.ReadValue<Vector2>();
 
         /*
         Input.GetButton(string "button") is a method that returns a bool value
@@ -36,18 +43,10 @@ public class playerControl : MonoBehaviour
         baseAttackPressed = Input.GetButton("Fire3");
         //NOTE: will change "Fire3" to right click mouse button later
 
-        animator.SetFloat("XInput", movementInput.x);
-        animator.SetFloat("YInput", movementInput.y);
-        animator.SetFloat("speed", movementInput.sqrMagnitude);
+        animator.SetFloat("XInput", moveInput.x);
+        animator.SetFloat("YInput", moveInput.y);
+        animator.SetFloat("speed", moveInput.sqrMagnitude);
         animator.SetBool("attacking", baseAttackPressed);
-        if (Input.GetButtonDown("Fire3"))
-        {
-            StartCoroutine(startAttack("base"));
-        }
-        if (Input.GetButtonUp("Fire3"))
-        {
-            StopCoroutine(startAttack("base"));
-        }
         snowballDistance = new Vector3(0.1f + movementInput.x * 0.1f, 0.1f + movementInput.y * 0.1f, 0);
     }
 
@@ -55,6 +54,7 @@ public class playerControl : MonoBehaviour
     void FixedUpdate()
     {
         rb2D.MovePosition(rb2D.position + movementInput * speed * Time.fixedDeltaTime);
+
     }
     IEnumerator startAttack(string attack)
     {
@@ -100,5 +100,59 @@ public class playerControl : MonoBehaviour
                 break;
         }
         yield break;
+    }
+
+    private void OnEnable()
+    {
+        move = playerControls.Player.Move;
+        fire = playerControls.Player.Fire1;
+        fire.Enable();
+        fire.performed += Attack;
+        move.Enable();
+    }
+    private void OnDisable()
+    {
+        move.Disable();
+        fire.Disable();
+    }
+    private void Awake()
+    {
+        playerControls = new PlayerInputActions();
+    }
+
+    private void Attack(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            StartCoroutine(startAttack("base"));
+        }
+        if (context.canceled)
+        {
+            StopCoroutine(startAttack("base"));
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        var temp = this.GetComponent<healthSystem>();
+        if (collision.collider.tag == "Enemy")
+        {
+            switch (collision.collider.name)
+            {
+                case "EnemyNormal":
+                    temp.Freeze(50);
+                    break;
+                case "EnemyFast":
+                    temp.Freeze(25);
+                    break;
+                case "EnemySlow":
+                    temp.Freeze(75);
+                    break;
+
+            }
+        }
+        if (temp.Checkup())
+        {
+
+        }
     }
 }
