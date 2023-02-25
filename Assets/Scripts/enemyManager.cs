@@ -12,19 +12,16 @@ public class enemyManager : MonoBehaviour
     {
         if(this.gameObject.name == "EnemyFast")
         {
-            eHP = 5;
             eDamage = 25;
             drops = 5;
         }
         if (this.gameObject.name == "EnemyNormal")
         {
-            eHP = 15;
             eDamage = 50;
             drops = 10;
         }
         if (this.gameObject.name == "EnemySlow")
         {
-            eHP = 45;
             eDamage = 75;
             drops = 20;
         }

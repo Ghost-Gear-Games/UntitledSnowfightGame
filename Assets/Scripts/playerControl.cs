@@ -15,10 +15,11 @@ public class playerControl : MonoBehaviour
     public attackManager.yellowSnowball yellowSnowball;
     public attackManager.slush slush;
 
-    public PlayerInputActions playerControls;
+    public PlayerActions playerControls;
     public InputAction move;
     public InputAction fire;
     public Vector2 moveInput = Vector2.zero;
+
     private void Start()
     {
 
@@ -31,8 +32,6 @@ public class playerControl : MonoBehaviour
 
         */
 
-        movementInput.x = Input.GetAxisRaw("Horizontal");
-        movementInput.y = Input.GetAxisRaw("Vertical");
         moveInput = move.ReadValue<Vector2>();
 
         /*
@@ -53,7 +52,7 @@ public class playerControl : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        rb2D.MovePosition(rb2D.position + movementInput * speed * Time.fixedDeltaTime);
+        rb2D.MovePosition(rb2D.position + moveInput * speed * Time.fixedDeltaTime);
 
     }
     IEnumerator startAttack(string attack)
@@ -69,27 +68,31 @@ public class playerControl : MonoBehaviour
                 //
                 //create 'bullet'
                 var baseSnowball = Instantiate(snowball.snowballPrefab, this.transform);
+                Rigidbody2D snowballrb = baseSnowball.GetComponent<Rigidbody2D>();
                 //place bullet in the direction the player is moving
                 baseSnowball.transform.position = this.transform.position + snowballDistance;
                 //grow 'bullet'
                 //stop 'bullet' growth on player input or at certain size
                 Vector3 scaleO = baseSnowball.transform.localScale;
                 Vector3 maxSize = new Vector3(.5f, .5f, 0);
-                while (baseAttackPressed && baseSnowball.transform.localScale != maxSize)
+                while (baseAttackPressed && baseSnowball.transform.localScale.x < maxSize.x)
                 {
                     baseSnowball.transform.localScale = Vector3.Lerp(scaleO, maxSize, rateOfGrowth);
                     baseSnowball.transform.position = this.transform.position + snowballDistance;
                     snowball.size = baseSnowball.transform.localScale;
-                    snowball.damage = baseSnowball.transform.localScale.x * 10;
-                    rateOfGrowth += 0.005f;
-                    yield return null;
+                    snowball.damage = ((baseSnowball.transform.localScale.x * 10) + (snowball.upgradeCount * 5));
+                    rateOfGrowth += 0.001f;
                 }
+                while(baseAttackPressed)
+                {
+                    baseSnowball.transform.position = this.transform.position + new Vector3(0, .5f);
+                }
+                    snowballrb.velocity += 2 * (moveInput);
                 rateOfGrowth = 0;
-                baseSnowball.transform.position = this.transform.position + new Vector3(0,.5f);
+                
                 //start new attack holding animation
                 //on player input release 'bullet' in direction player is moving
-                Rigidbody2D snowballrb = baseSnowball.GetComponent<Rigidbody2D>();
-                snowballrb.velocity += 2 * (movementInput + new Vector2(0.1f, 0.1f));
+
                 //delete 'bullet' after a set time or/and on collision
                 
 
@@ -104,8 +107,8 @@ public class playerControl : MonoBehaviour
 
     private void OnEnable()
     {
-        move = playerControls.Player.Move;
-        fire = playerControls.Player.Fire1;
+        move = playerControls.Gameplay.Move;
+        fire = playerControls.Gameplay.Fire1;
         fire.Enable();
         fire.performed += Attack;
         move.Enable();
@@ -117,7 +120,7 @@ public class playerControl : MonoBehaviour
     }
     private void Awake()
     {
-        playerControls = new PlayerInputActions();
+        playerControls = new PlayerActions();
     }
 
     private void Attack(InputAction.CallbackContext context)

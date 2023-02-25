@@ -32,4 +32,23 @@ public class attackManager : MonoBehaviour
         public float slowdownFactor = 0.8f;
         public float cooldown;
     };
+    public snowball snow;
+    public yellowSnowball yellowSnow;
+    public slush slushPuddle;
+    private void Awake()
+    {
+        switch (this.name) { 
+            case "Snowball":
+                snow.upgradeCost = 50;
+                break;
+            case "YellowSnowball":
+                yellowSnow.upgradeCount = -1;
+                yellowSnow.upgradeCost = 50;
+                break;
+            case "Slush":
+                slushPuddle.upgradeCount = -1;
+                slushPuddle.upgradeCost = 75;
+                break;
+        }
+    }
 }

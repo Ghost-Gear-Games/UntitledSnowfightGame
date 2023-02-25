@@ -1,8 +1,8 @@
 {
-    "name": "playerInputActions",
+    "name": "playerActions",
     "maps": [
         {
-            "name": "Player",
+            "name": "Gameplay",
             "id": "fbe877e7-b24d-4dd7-a0ea-ccf9c432d1bd",
             "actions": [
                 {
@@ -277,6 +277,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
+                    "action": "Fire1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9e81ba34-69b2-4db4-851b-d9a25b53935e",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "Fire1",
                     "isComposite": false,
                     "isPartOfComposite": false

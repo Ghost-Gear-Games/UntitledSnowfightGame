@@ -3262,6 +3262,9 @@ MonoBehaviour:
     m_SingletonActionBindings: []
     m_Flags: 0
   moveInput: {x: 0, y: 0}
+  snowballUpgrades: 0
+  yellowSnowballUpgrades: 0
+  slushUpgrades: 0
 --- !u!61 &958443453
 BoxCollider2D:
   m_ObjectHideFlags: 0
