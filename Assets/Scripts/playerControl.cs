@@ -6,8 +6,6 @@ using UnityEngine.InputSystem;
 public class playerControl : MonoBehaviour
 {
     public float speed = 5;
-    public bool baseAttackPressed;
-    public Vector2 movementInput;
     public Vector3 snowballDistance;
     public Animator animator;
     public Rigidbody2D rb2D;
@@ -19,6 +17,14 @@ public class playerControl : MonoBehaviour
     public InputAction move;
     public InputAction fire;
     public Vector2 moveInput = Vector2.zero;
+
+    public enum weapon { BASIC, YELLOW, SLUSH };
+    public weapon currentWeapon;
+
+    public timer snowballChargetimer;
+    public timer yellowSnowCooldown;
+    public timer slushLiftime;
+    public timer slushCooldown;
 
     private void Start()
     {
@@ -39,14 +45,12 @@ public class playerControl : MonoBehaviour
         this value is true if the button is currently bieng held down
         and this value is false if it isnt
         */
-        baseAttackPressed = Input.GetButton("Fire3");
         //NOTE: will change "Fire3" to right click mouse button later
 
         animator.SetFloat("XInput", moveInput.x);
         animator.SetFloat("YInput", moveInput.y);
         animator.SetFloat("speed", moveInput.sqrMagnitude);
-        animator.SetBool("attacking", baseAttackPressed);
-        snowballDistance = new Vector3(0.1f + movementInput.x * 0.1f, 0.1f + movementInput.y * 0.1f, 0);
+        snowballDistance = new Vector3(0.1f + moveInput.x * 0.1f, 0.1f + moveInput.y * 0.1f, 0);
     }
 
     // Update is called once per frame
@@ -60,46 +64,46 @@ public class playerControl : MonoBehaviour
 
         switch (attack)
         {
-            case "base":
-                //BASE ATTACK OLD
-                  float rateOfGrowth = 0f;
-                //start 'basic attack charge' animation
-                //start attackTimer
-                //
-                //create 'bullet'
-                var baseSnowball = Instantiate(snowball.snowballPrefab, this.transform);
-                Rigidbody2D snowballrb = baseSnowball.GetComponent<Rigidbody2D>();
-                //place bullet in the direction the player is moving
-                baseSnowball.transform.position = this.transform.position + snowballDistance;
-                //grow 'bullet'
-                //stop 'bullet' growth on player input or at certain size
-                Vector3 scaleO = baseSnowball.transform.localScale;
-                Vector3 maxSize = new Vector3(.5f, .5f, 0);
-                while (baseAttackPressed && baseSnowball.transform.localScale.x < maxSize.x)
+            case "basic":
+                var visualSnowball = Instantiate(snowball.snowballPrefab, this.transform);
+                visualSnowball.transform.position = this.transform.position + snowballDistance;
+                snowballChargetimer.timerDuration = 5;
+                snowballChargetimer.timerOn = true;
+                snowballChargetimer.StartTimerCountUp();
+                if (!snowballChargetimer.timerOn)
                 {
-                    baseSnowball.transform.localScale = Vector3.Lerp(scaleO, maxSize, rateOfGrowth);
-                    baseSnowball.transform.position = this.transform.position + snowballDistance;
-                    snowball.size = baseSnowball.transform.localScale;
-                    snowball.damage = ((baseSnowball.transform.localScale.x * 10) + (snowball.upgradeCount * 5));
-                    rateOfGrowth += 0.001f;
+                    Destroy(visualSnowball);
+                    var snowballProjectile = Instantiate(snowball.snowballPrefab, this.transform);
+                    snowballProjectile.transform.localScale *= snowballChargetimer.timerTime;
+                    var atkMgr = snowballProjectile.GetComponent<attackManager>();
+                    atkMgr.snow.size = snowballProjectile.transform.localScale;
+                    atkMgr.snow.damage = snowballProjectile.transform.localScale.x + (atkMgr.snow.upgradeCount * 5);
+                    snowballProjectile.GetComponent<Rigidbody2D>().velocity += 2 * moveInput;
                 }
-                while(baseAttackPressed)
+                yield return new WaitForSeconds(0.05f);
+                
+                break;
+            case "yellow":
+                if (yellowSnowball.upgradeCount >= 0) {
+                    var yellowSnowProjectile = Instantiate(yellowSnowball.yellowSnowballPrefab, this.transform);
+                    yellowSnowProjectile.transform.position = this.transform.position + snowballDistance;
+                    yellowSnowProjectile.GetComponent<Rigidbody2D>().velocity = 2 * moveInput;
+                    var yAtkMgr = yellowSnowProjectile.GetComponent<attackManager>();
+                    yAtkMgr.yellowSnow.damage = 3 + (yAtkMgr.yellowSnow.upgradeCount * 2);
+                    yAtkMgr.yellowSnow.damageOverTime = 1 + (Mathf.Clamp(yAtkMgr.yellowSnow.upgradeCount * 1, 0, 3));
+                    yAtkMgr.yellowSnow.damageTimeAmount = 12 - (Mathf.Clamp(yAtkMgr.yellowSnow.upgradeCount * 2, 0, 4));
+                }
+                break;
+            case "slush":
+                if(slush.upgradeCount >= 0)
                 {
-                    baseSnowball.transform.position = this.transform.position + new Vector3(0, .5f);
+                    var slushPuddle = Instantiate(slush.slushPrefab, this.transform);
+                    slushPuddle.transform.position = this.transform.position;
+                    var sAtkMgr = slushPuddle.GetComponent<attackManager>();
+                    sAtkMgr.slushPuddle.size = new Vector3(1 * (sAtkMgr.slushPuddle.upgradeCount), 1 * (sAtkMgr.slushPuddle.upgradeCount), 0);
+                    sAtkMgr.slushPuddle.slowdownFactor = 1;
+                    sAtkMgr.slushPuddle.damageMultiplier = 1.2 + (sAtkMgr.slushPuddle.upgradeCount * 0.1);
                 }
-                    snowballrb.velocity += 2 * (moveInput);
-                rateOfGrowth = 0;
-                
-                //start new attack holding animation
-                //on player input release 'bullet' in direction player is moving
-
-                //delete 'bullet' after a set time or/and on collision
-                
-
-                break;
-            case "attack2":
-                break;
-            case "attack3":
                 break;
         }
         yield break;
@@ -127,11 +131,22 @@ public class playerControl : MonoBehaviour
     {
         if (context.performed)
         {
-            StartCoroutine(startAttack("base"));
+            switch (currentWeapon)
+            {
+                case weapon.BASIC:
+                    StartCoroutine(startAttack("basic"));
+                    break;
+                case weapon.YELLOW:
+                    StartCoroutine(startAttack("yellow"));
+                    break;
+                case weapon.SLUSH:
+                    StartCoroutine(startAttack("slush"));
+                    break;
+            }
         }
         if (context.canceled)
         {
-            StopCoroutine(startAttack("base"));
+            StopCoroutine(startAttack("basic"));
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)

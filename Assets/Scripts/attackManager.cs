@@ -20,6 +20,7 @@ public class attackManager : MonoBehaviour
         public GameObject yellowSnowballPrefab;
         public float damage;
         public int damageOverTime;
+        public int damageTimeAmount;
         public float cooldown;
     };
     public class slush
@@ -27,7 +28,7 @@ public class attackManager : MonoBehaviour
         public int upgradeCost;
         public int upgradeCount;
         public GameObject slushPrefab;
-        public float damage;
+        public Vector3 size;
         public double damageMultiplier;
         public float slowdownFactor = 0.8f;
         public float cooldown;
@@ -49,6 +50,13 @@ public class attackManager : MonoBehaviour
                 slushPuddle.upgradeCount = -1;
                 slushPuddle.upgradeCost = 75;
                 break;
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if(this.gameObject.layer == 6 && collision.collider.gameObject.layer == 3)
+        {
+            Destroy(this.gameObject);
         }
     }
 }

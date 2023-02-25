@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3291026851434830527}
   - component: {fileID: 3117946779016677968}
   - component: {fileID: 1037260648144165130}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Snowball
   m_TagString: playerAttack
   m_Icon: {fileID: 0}
@@ -146,3 +146,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab362c176947896488d71bd608dc7530, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  snow:
+    upgradeCount: 0
+    upgradeCost: 0
+    snowballPrefab: {fileID: 0}
+    size: {x: 0, y: 0}
+    damage: 0

@@ -3262,9 +3262,6 @@ MonoBehaviour:
     m_SingletonActionBindings: []
     m_Flags: 0
   moveInput: {x: 0, y: 0}
-  snowballUpgrades: 0
-  yellowSnowballUpgrades: 0
-  slushUpgrades: 0
 --- !u!61 &958443453
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3318,7 +3315,7 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
+  m_DefaultActionMap: Gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!114 &958443455

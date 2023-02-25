@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2157149268695263142}
   - component: {fileID: 3291026851434830527}
   - component: {fileID: 8947037160344753809}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: YellowSnowball
   m_TagString: playerAttack
   m_Icon: {fileID: 0}

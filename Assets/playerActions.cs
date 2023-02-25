@@ -53,33 +53,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Hold"",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Fire2"",
-                    ""type"": ""Button"",
-                    ""id"": ""b63b0612-efe2-420c-b355-4cf6a8e6def8"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Fire3"",
-                    ""type"": ""Button"",
-                    ""id"": ""e8e76e40-3ba2-4e2c-89f6-a2e5d2c904a4"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Change Weapon"",
-                    ""type"": ""Value"",
-                    ""id"": ""cb9dc389-8543-42b9-8cd4-47db2177ad84"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -313,149 +286,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""action"": ""Fire1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""a6fed390-6eb0-49a0-8e33-4a9eff1bc3f8"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Fire2"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""068f8984-5d78-4e24-9e44-a7695fb32f0c"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Fire2"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c5488cbf-e374-40ab-a63e-dc946c60c789"",
-                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Touch"",
-                    ""action"": ""Fire2"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7fcf565f-938f-48fb-9efc-78d356db8634"",
-                    ""path"": ""<Joystick>/trigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Joystick"",
-                    ""action"": ""Fire2"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""136331e3-7538-4b2d-ae6f-5ee86ec830d2"",
-                    ""path"": ""<XRController>/{PrimaryAction}"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""XR"",
-                    ""action"": ""Fire2"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""0596c565-c6af-4c23-acb5-54583629b574"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Fire3"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7c121a7d-a9db-4505-a653-85ac65b9a505"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Fire3"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""23fd8485-4992-4522-8237-938ad3d4cfe9"",
-                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Touch"",
-                    ""action"": ""Fire3"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3186a976-4573-40fe-98f8-49f950a87d02"",
-                    ""path"": ""<Joystick>/trigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Joystick"",
-                    ""action"": ""Fire3"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""8f018733-7a11-4841-925d-274630ea35e5"",
-                    ""path"": ""<XRController>/{PrimaryAction}"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""XR"",
-                    ""action"": ""Fire3"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""1D Axis"",
-                    ""id"": ""95ec7820-a316-4e00-98d2-0f00d2cde152"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": ""Press"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Change Weapon"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""51e4824c-f88e-47d3-86df-d0b49fee2072"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Change Weapon"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""0c9739d5-962e-478d-bc22-0d9c24047ac1"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Change Weapon"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -1044,9 +874,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         m_Gameplay_Move = m_Gameplay.FindAction("Move", throwIfNotFound: true);
         m_Gameplay_Look = m_Gameplay.FindAction("Look", throwIfNotFound: true);
         m_Gameplay_Fire1 = m_Gameplay.FindAction("Fire1", throwIfNotFound: true);
-        m_Gameplay_Fire2 = m_Gameplay.FindAction("Fire2", throwIfNotFound: true);
-        m_Gameplay_Fire3 = m_Gameplay.FindAction("Fire3", throwIfNotFound: true);
-        m_Gameplay_ChangeWeapon = m_Gameplay.FindAction("Change Weapon", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1121,9 +948,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Move;
     private readonly InputAction m_Gameplay_Look;
     private readonly InputAction m_Gameplay_Fire1;
-    private readonly InputAction m_Gameplay_Fire2;
-    private readonly InputAction m_Gameplay_Fire3;
-    private readonly InputAction m_Gameplay_ChangeWeapon;
     public struct GameplayActions
     {
         private @PlayerActions m_Wrapper;
@@ -1131,9 +955,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Gameplay_Move;
         public InputAction @Look => m_Wrapper.m_Gameplay_Look;
         public InputAction @Fire1 => m_Wrapper.m_Gameplay_Fire1;
-        public InputAction @Fire2 => m_Wrapper.m_Gameplay_Fire2;
-        public InputAction @Fire3 => m_Wrapper.m_Gameplay_Fire3;
-        public InputAction @ChangeWeapon => m_Wrapper.m_Gameplay_ChangeWeapon;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1152,15 +973,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Fire1.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFire1;
                 @Fire1.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFire1;
                 @Fire1.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFire1;
-                @Fire2.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFire2;
-                @Fire2.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFire2;
-                @Fire2.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFire2;
-                @Fire3.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFire3;
-                @Fire3.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFire3;
-                @Fire3.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFire3;
-                @ChangeWeapon.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnChangeWeapon;
-                @ChangeWeapon.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnChangeWeapon;
-                @ChangeWeapon.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnChangeWeapon;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -1174,15 +986,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Fire1.started += instance.OnFire1;
                 @Fire1.performed += instance.OnFire1;
                 @Fire1.canceled += instance.OnFire1;
-                @Fire2.started += instance.OnFire2;
-                @Fire2.performed += instance.OnFire2;
-                @Fire2.canceled += instance.OnFire2;
-                @Fire3.started += instance.OnFire3;
-                @Fire3.performed += instance.OnFire3;
-                @Fire3.canceled += instance.OnFire3;
-                @ChangeWeapon.started += instance.OnChangeWeapon;
-                @ChangeWeapon.performed += instance.OnChangeWeapon;
-                @ChangeWeapon.canceled += instance.OnChangeWeapon;
             }
         }
     }
@@ -1342,9 +1145,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnFire1(InputAction.CallbackContext context);
-        void OnFire2(InputAction.CallbackContext context);
-        void OnFire3(InputAction.CallbackContext context);
-        void OnChangeWeapon(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
