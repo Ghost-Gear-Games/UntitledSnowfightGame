@@ -40,6 +40,12 @@ public class enemyManager : MonoBehaviour
         GameObject collider = collision.collider.gameObject;
         if (collision.collider.tag == "playerAttack")
         {
+            switch (collision.collider.name) 
+                {
+                case "Snowball":
+                    var projectileData = collider.GetComponent<attackManager>();
+                    break;
+                }
 
         }
     }
