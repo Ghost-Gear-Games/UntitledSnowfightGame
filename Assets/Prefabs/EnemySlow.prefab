@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3122418634871185023}
   - component: {fileID: 4276300071833203550}
   - component: {fileID: 6892930299105728249}
+  - component: {fileID: 5524658638846728804}
   m_Layer: 3
   m_Name: EnemySlow
   m_TagString: Enemy
@@ -30,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 6162967967538041313}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.07, y: -0.54, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 507094239879058998}
@@ -100,9 +101,9 @@ MonoBehaviour:
   targetCompatibility: {fileID: 0}
   maxAcceleration: -2.5
   rotationSpeed: 360
-  slowdownDistance: 1
+  slowdownDistance: 1.7
   pickNextWaypointDist: 2
-  endReachedDistance: 0.6
+  endReachedDistance: 1.1
   alwaysDrawGizmos: 1
   slowWhenNotFacingTarget: 1
   whenCloseToDestination: 0
@@ -134,7 +135,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.0031116009, y: -0.00785473}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.28866667}
@@ -145,7 +146,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.0684581, y: 1.4015644}
   m_EdgeRadius: 0
 --- !u!114 &6892930299105728249
 MonoBehaviour:
@@ -159,9 +160,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce1d692f0d78a544980b5d62533cc309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eHP: 0
   eDamage: 0
   drops: 0
+--- !u!114 &5524658638846728804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6162967967538041313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33664f76bbecd874d80e7b85f940e0a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBar: {fileID: 0}
+  healthAmount: 100
 --- !u!1 &6629347563764694837
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,7 +249,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f732b167c8f7e474bbe2d20990d1623d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

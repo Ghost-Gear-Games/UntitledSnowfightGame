@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class enemyManager : MonoBehaviour
 {
-    public float eHP;
     public float eDamage;
     public int drops;
     // Start is called before the first frame update

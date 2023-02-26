@@ -7,8 +7,10 @@ public class playerControl : MonoBehaviour
 {
     public float speed = 5;
     public Vector3 snowballDistance;
-    public Animator animator;
     public Rigidbody2D rb2D;
+    public Sprite HurtSprite;
+    public Sprite Regular;
+
     public attackManager.snowball snowball;
     public attackManager.yellowSnowball yellowSnowball;
     public attackManager.slush slush;
@@ -21,10 +23,10 @@ public class playerControl : MonoBehaviour
     public enum weapon { BASIC, YELLOW, SLUSH };
     public weapon currentWeapon;
 
-    public timer snowballChargetimer;
-    public timer yellowSnowCooldown;
-    public timer slushLiftime;
-    public timer slushCooldown;
+    public clockTimer.timer snowballChargetimer = new clockTimer.timer();
+    public clockTimer.timer yellowSnowCooldown = new clockTimer.timer();
+    public clockTimer.timer slushLiftime = new clockTimer.timer();
+    public clockTimer.timer slushCooldown = new clockTimer.timer();
 
     private void Start()
     {
@@ -47,9 +49,6 @@ public class playerControl : MonoBehaviour
         */
         //NOTE: will change "Fire3" to right click mouse button later
 
-        animator.SetFloat("XInput", moveInput.x);
-        animator.SetFloat("YInput", moveInput.y);
-        animator.SetFloat("speed", moveInput.sqrMagnitude);
         snowballDistance = new Vector3(0.1f + moveInput.x * 0.1f, 0.1f + moveInput.y * 0.1f, 0);
     }
 
@@ -149,28 +148,48 @@ public class playerControl : MonoBehaviour
             StopCoroutine(startAttack("basic"));
         }
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collider)
     {
         var temp = this.GetComponent<healthSystem>();
-        if (collision.collider.tag == "Enemy")
+        if (collider.tag == "Enemy")
         {
-            switch (collision.collider.name)
+
+            switch (collider.name)
             {
                 case "EnemyNormal":
+                    StartCoroutine(HurtAnim());
                     temp.Freeze(50);
                     break;
                 case "EnemyFast":
+                    StartCoroutine(HurtAnim());
                     temp.Freeze(25);
                     break;
                 case "EnemySlow":
+                    StartCoroutine(HurtAnim());
                     temp.Freeze(75);
                     break;
 
             }
         }
-        if (temp.Checkup())
+        if (!temp.Checkup())
         {
-
+            //gameOver
         }
+    }
+    
+    IEnumerator HurtAnim()
+    {
+        var GFX = this.gameObject.GetComponentInChildren<SpriteRenderer>();
+
+        for(int i = 0; i < 3; i++)
+        {
+            GFX.enabled = true;
+            GFX.sprite = HurtSprite;
+            yield return new WaitForSeconds(0.25f);
+            GFX.enabled = false;
+            yield return new WaitForSeconds(0.25f);
+        }
+        GFX.sprite = Regular;
+        yield break;
     }
 }
