@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -8086623589558859037}
   - component: {fileID: 1720466249338724568}
   - component: {fileID: -5104385418024639772}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: EnemyFast
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -82,7 +82,7 @@ MonoBehaviour:
   radius: 0.5
   height: 2
   canMove: 1
-  maxSpeed: 2
+  maxSpeed: 4
   gravity: {x: 0, y: 0, z: 0}
   groundMask:
     serializedVersion: 2
@@ -132,7 +132,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.019782186, y: -0.0012664795}
@@ -160,8 +160,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce1d692f0d78a544980b5d62533cc309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eType: Fast
   eDamage: 0
   drops: 0
+  eHPSystem: {fileID: -5104385418024639772}
+  slushed: 0
+  lunchmoney: {fileID: 5286055719117215257, guid: a37ef30d6132bd34cb4230941b37e74c, type: 3}
 --- !u!114 &-5104385418024639772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,7 +190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6903420828277082527}
   - component: {fileID: 3115328515814475787}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}

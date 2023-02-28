@@ -10,32 +10,39 @@ public class clockTimer : MonoBehaviour
         public float timerDuration;
         public float timerTime = 0;
 
-        public void ResetTimer()
-        {
-            timerTime = 0;
-        }
+
         public void SetTimerTime(float timeAmount)
         {
             timerTime = timeAmount;
         }
-        public void StartTimerCountUp()
+        public void CountTimer(bool CountUp)
         {
-            while (timerOn && timerTime < timerDuration)
+            if (CountUp && timerOn && timerTime >= timerDuration)
             {
-                timerTime += Time.deltaTime;
+                {
+                    Debug.Log("counted up once");
+                    timerTime += Time.deltaTime;
+
+                }
+
 
             }
-
-            timerOn = false;
-        }
-        public void StartTimerCountDown()
-        {
-            while (timerOn && timerTime > timerDuration)
+            if (timerTime > timerDuration && CountUp)
             {
+                Debug.Log("turned off counting up timer due to its duration bieng met");
+                timerOn = false;
+            }
+            if (!CountUp && timerOn && timerTime <= timerDuration)
+            {
+                Debug.Log("Counted down once");
                 timerTime -= Time.deltaTime;
             }
-
-            timerOn = false;
+            if(timerTime < timerDuration && !CountUp)
+            {
+                Debug.Log("turned off counting down timer due to its duration bieng met");
+                timerOn = false;
+            }
         }
+        
     }
 }

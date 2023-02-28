@@ -13,23 +13,25 @@ public class attackManager : MonoBehaviour
         public Vector2 size;
         public float damage;
     };
+    [System.Serializable]
     public class yellowSnowball
     {
         public int upgradeCost;
         public int upgradeCount;
         public GameObject yellowSnowballPrefab;
         public float damage;
-        public int damageOverTime;
-        public int damageTimeAmount;
+        public float damageOverTime;
+        public float damageTimeAmount;
         public float cooldown;
     };
+    [System.Serializable]
     public class slush
     {
         public int upgradeCost;
         public int upgradeCount;
         public GameObject slushPrefab;
         public Vector3 size;
-        public double damageMultiplier;
+        public double damageMultiplier = 1;
         public float slowdownFactor = 0.8f;
         public float cooldown;
     };
@@ -52,10 +54,26 @@ public class attackManager : MonoBehaviour
                 break;
         }
     }
-    private void OnCollisionExit2D(Collision2D collision)
+    private void Update()
     {
-        if(this.gameObject.layer == 6 && collision.collider.gameObject.layer == 3)
+        switch (this.name)
         {
+            case "Snowball":
+                snow.upgradeCost = 10 * ((int)Mathf.Pow(5, snow.upgradeCount + 1));
+                break;
+            case "YellowSnowball":
+                yellowSnow.upgradeCost = 10 * ((int)Mathf.Pow(7.5f, yellowSnow.upgradeCount + 1));
+                break;
+            case "Slush":
+                slushPuddle.upgradeCost = 10 * ((int)Mathf.Pow(10, slushPuddle.upgradeCount + 1));
+                break;
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(this.gameObject.tag == "playerAttack" && collision.collider.gameObject.layer == 3 && this.gameObject != slushPuddle.slushPrefab)
+        {
+            Debug.Log("attack collided with edge of screen");
             Destroy(this.gameObject);
         }
     }

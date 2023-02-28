@@ -23,91 +23,55 @@ public class playerControl : MonoBehaviour
     public enum weapon { BASIC, YELLOW, SLUSH };
     public weapon currentWeapon;
 
-    public clockTimer.timer snowballChargetimer = new clockTimer.timer();
-    public clockTimer.timer yellowSnowCooldown = new clockTimer.timer();
-    public clockTimer.timer slushLiftime = new clockTimer.timer();
-    public clockTimer.timer slushCooldown = new clockTimer.timer();
+    public clockTimer.timer yellowSnowCooldown = new();
+    public clockTimer.timer slushLiftime = new();
+    public clockTimer.timer slushCooldown = new();
 
-    private void Start()
+    public int snowballSpeed;
+
+    public int lunchMoneyTotal = 0;
+
+    public void ChangeWeapon(int Weapon)
     {
+        switch (Weapon)
+        {
+            case 1:
+                currentWeapon = weapon.BASIC;
+                break;
+            case 2:
+                currentWeapon = weapon.YELLOW;
+                break;
+            case 3:
+                currentWeapon = weapon.SLUSH;
+                break;
+        }
 
     }
     void Update()
     {
-        //Input is collected and set to our variable every frame Input in this case is class
-
-        /*
-
-        */
-
+        //updating movement input
         moveInput = move.ReadValue<Vector2>();
 
-        /*
-        Input.GetButton(string "button") is a method that returns a bool value
-        this value is true if the button is currently bieng held down
-        and this value is false if it isnt
-        */
-        //NOTE: will change "Fire3" to right click mouse button later
-
+        if(moveInput.x < 0)
+        {
+            this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
+        }
+        if (moveInput.x > 0)
+        {
+            this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
+        }
         snowballDistance = new Vector3(0.1f + moveInput.x * 0.1f, 0.1f + moveInput.y * 0.1f, 0);
+        yellowSnowCooldown.CountTimer(false);
+        slushLiftime.CountTimer(true);
+        slushCooldown.CountTimer(false);
     }
-
-    // Update is called once per frame
+    //movement
     void FixedUpdate()
     {
-        rb2D.MovePosition(rb2D.position + moveInput * speed * Time.fixedDeltaTime);
+        rb2D.MovePosition(rb2D.position + speed * Time.fixedDeltaTime * moveInput);
 
     }
-    IEnumerator startAttack(string attack)
-    {
-
-        switch (attack)
-        {
-            case "basic":
-                var visualSnowball = Instantiate(snowball.snowballPrefab, this.transform);
-                visualSnowball.transform.position = this.transform.position + snowballDistance;
-                snowballChargetimer.timerDuration = 5;
-                snowballChargetimer.timerOn = true;
-                snowballChargetimer.StartTimerCountUp();
-                if (!snowballChargetimer.timerOn)
-                {
-                    Destroy(visualSnowball);
-                    var snowballProjectile = Instantiate(snowball.snowballPrefab, this.transform);
-                    snowballProjectile.transform.localScale *= snowballChargetimer.timerTime;
-                    var atkMgr = snowballProjectile.GetComponent<attackManager>();
-                    atkMgr.snow.size = snowballProjectile.transform.localScale;
-                    atkMgr.snow.damage = snowballProjectile.transform.localScale.x + (atkMgr.snow.upgradeCount * 5);
-                    snowballProjectile.GetComponent<Rigidbody2D>().velocity += 2 * moveInput;
-                }
-                yield return new WaitForSeconds(0.05f);
-                
-                break;
-            case "yellow":
-                if (yellowSnowball.upgradeCount >= 0) {
-                    var yellowSnowProjectile = Instantiate(yellowSnowball.yellowSnowballPrefab, this.transform);
-                    yellowSnowProjectile.transform.position = this.transform.position + snowballDistance;
-                    yellowSnowProjectile.GetComponent<Rigidbody2D>().velocity = 2 * moveInput;
-                    var yAtkMgr = yellowSnowProjectile.GetComponent<attackManager>();
-                    yAtkMgr.yellowSnow.damage = 3 + (yAtkMgr.yellowSnow.upgradeCount * 2);
-                    yAtkMgr.yellowSnow.damageOverTime = 1 + (Mathf.Clamp(yAtkMgr.yellowSnow.upgradeCount * 1, 0, 3));
-                    yAtkMgr.yellowSnow.damageTimeAmount = 12 - (Mathf.Clamp(yAtkMgr.yellowSnow.upgradeCount * 2, 0, 4));
-                }
-                break;
-            case "slush":
-                if(slush.upgradeCount >= 0)
-                {
-                    var slushPuddle = Instantiate(slush.slushPrefab, this.transform);
-                    slushPuddle.transform.position = this.transform.position;
-                    var sAtkMgr = slushPuddle.GetComponent<attackManager>();
-                    sAtkMgr.slushPuddle.size = new Vector3(1 * (sAtkMgr.slushPuddle.upgradeCount), 1 * (sAtkMgr.slushPuddle.upgradeCount), 0);
-                    sAtkMgr.slushPuddle.slowdownFactor = 1;
-                    sAtkMgr.slushPuddle.damageMultiplier = 1.2 + (sAtkMgr.slushPuddle.upgradeCount * 0.1);
-                }
-                break;
-        }
-        yield break;
-    }
-
+    //input Control
     private void OnEnable()
     {
         move = playerControls.Gameplay.Move;
@@ -121,11 +85,12 @@ public class playerControl : MonoBehaviour
         move.Disable();
         fire.Disable();
     }
+
     private void Awake()
     {
         playerControls = new PlayerActions();
     }
-
+    //attack logic
     private void Attack(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -133,38 +98,72 @@ public class playerControl : MonoBehaviour
             switch (currentWeapon)
             {
                 case weapon.BASIC:
-                    StartCoroutine(startAttack("basic"));
+                    var snowballProjectile = Instantiate(snowball.snowballPrefab, this.transform);
+                    snowballProjectile.name = snowball.snowballPrefab.name;
+                    snowballProjectile.transform.localScale = 0.5f * new Vector3(((float)context.duration), ((float)context.duration));
+                    var desiredDir = this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX? moveInput + new Vector2(Random.Range(-0.2f, -0.1f), 0) : moveInput + new Vector2(Random.Range(0.1f, 0.2f), 0);
+                    var desiredVector = desiredDir.normalized * snowballSpeed;
+                    var atkMgr = snowballProjectile.GetComponent<attackManager>();
+                    atkMgr.snow.size = snowballProjectile.transform.localScale;
+                    atkMgr.snow.damage = (snowballProjectile.transform.localScale.x * 2) + (atkMgr.snow.upgradeCount * 5);
+                    snowballProjectile.GetComponent<Rigidbody2D>().velocity = desiredVector;
+                    Debug.Log("ran basic attack logic");
                     break;
                 case weapon.YELLOW:
-                    StartCoroutine(startAttack("yellow"));
+                    if (yellowSnowball.upgradeCount >= 0)
+                    {
+                        var yellowSnowProjectile = Instantiate(yellowSnowball.yellowSnowballPrefab, this.transform);
+                        yellowSnowProjectile.transform.position = this.transform.position + snowballDistance;
+                        var desiredDirY = this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX ? moveInput + new Vector2(Random.Range(-0.2f, -0.1f), 0) : moveInput + new Vector2(Random.Range(0.1f, 0.2f), 0);
+                        var desiredVectorY = desiredDirY.normalized * snowballSpeed;
+                        yellowSnowProjectile.GetComponent<Rigidbody2D>().velocity = desiredVectorY;
+                        var yAtkMgr = yellowSnowProjectile.GetComponent<attackManager>();
+                        yAtkMgr.yellowSnow.damage = 3 + (yAtkMgr.yellowSnow.upgradeCount * 2);
+                        yAtkMgr.yellowSnow.damageOverTime = 1 + (Mathf.Clamp(yAtkMgr.yellowSnow.upgradeCount * 1, 0, Mathf.Infinity));
+                        yAtkMgr.yellowSnow.damageTimeAmount = 12 - (Mathf.Clamp(yAtkMgr.yellowSnow.upgradeCount * 2, 0, 4));
+                    }
+                    Debug.Log("ran yellow attack logic");
                     break;
                 case weapon.SLUSH:
-                    StartCoroutine(startAttack("slush"));
+                    if (slush.upgradeCount >= 0)
+                    {
+                        var slushPuddle = Instantiate(slush.slushPrefab, this.transform);
+                        slushPuddle.transform.position = this.transform.position;
+                        var sAtkMgr = slushPuddle.GetComponent<attackManager>();
+                        sAtkMgr.slushPuddle.size = new Vector3(1 * (sAtkMgr.slushPuddle.upgradeCount + 1), 1 * (sAtkMgr.slushPuddle.upgradeCount + 1), 0);
+                        sAtkMgr.slushPuddle.slowdownFactor = 1;
+                        sAtkMgr.slushPuddle.damageMultiplier = 1.2 + (sAtkMgr.slushPuddle.upgradeCount * 0.1);
+                    }
+                    Debug.Log("ran slush attack logic");
                     break;
             }
         }
         if (context.canceled)
         {
-            StopCoroutine(startAttack("basic"));
+
         }
     }
     private void OnTriggerEnter2D(Collider2D collider)
     {
+        Debug.Log("entered Trigger collison");
         var temp = this.GetComponent<healthSystem>();
         if (collider.tag == "Enemy")
         {
-
-            switch (collider.name)
+            Debug.Log("collider is an ememy");
+            switch (collider.GetComponent<enemyManager>().eType)
             {
-                case "EnemyNormal":
-                    StartCoroutine(HurtAnim());
-                    temp.Freeze(50);
+                case "Normal":
+                        StartCoroutine(HurtAnim());
+                        temp.Freeze(50);
+                        Debug.Log("collider is enemy normal");
                     break;
-                case "EnemyFast":
+                case "Fast":
+                    Debug.Log("collider is enemy fast");
                     StartCoroutine(HurtAnim());
                     temp.Freeze(25);
                     break;
-                case "EnemySlow":
+                case "Slow":
+                    Debug.Log("collider is enemy slow");
                     StartCoroutine(HurtAnim());
                     temp.Freeze(75);
                     break;
@@ -173,16 +172,19 @@ public class playerControl : MonoBehaviour
         }
         if (!temp.Checkup())
         {
+            Debug.Log("gameOver");
             //gameOver
         }
     }
     
     IEnumerator HurtAnim()
     {
-        var GFX = this.gameObject.GetComponentInChildren<SpriteRenderer>();
 
+        var GFX = this.gameObject.GetComponentInChildren<SpriteRenderer>();
+        yield return new WaitForEndOfFrame();
         for(int i = 0; i < 3; i++)
         {
+            Debug.Log("ran HurtAnimloop" + i + "times");
             GFX.enabled = true;
             GFX.sprite = HurtSprite;
             yield return new WaitForSeconds(0.25f);
@@ -190,6 +192,10 @@ public class playerControl : MonoBehaviour
             yield return new WaitForSeconds(0.25f);
         }
         GFX.sprite = Regular;
+        GFX.enabled = true;
+        Debug.Log("put regular sprite back");
         yield break;
     }
+    
+
 }
