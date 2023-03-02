@@ -19,19 +19,19 @@ public class enemyManager : MonoBehaviour
         if(eType == "EnemyFast")
         {
             eHPSystem.healthAmount = 5;
-            eDamage = 25;
+            eDamage = 12.5f;
             drops = 5;
         }
         if (eType == "EnemyNormal")
         {
-            eHPSystem.healthAmount = 15;
-            eDamage = 50;
+            eHPSystem.healthAmount = 8f;
+            eDamage = 25;
             drops = 10;
         }
         if (eType == "EnemySlow")
         {
-            eHPSystem.healthAmount = 45;
-            eDamage = 75;
+            eHPSystem.healthAmount = 12f;
+            eDamage = 50;
             drops = 20;
         }
     }

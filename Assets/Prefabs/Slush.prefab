@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 1609560086662492116}
   - component: {fileID: 6023001959496504459}
   - component: {fileID: 3206959050258222963}
+  - component: {fileID: -1407673126517262722}
+  - component: {fileID: 8242142743317283478}
   m_Layer: 0
   m_Name: Slush
   m_TagString: Untagged
@@ -111,3 +113,49 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &-1407673126517262722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6791135125014666012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0742301b203c42b468a6d6e776d050ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8242142743317283478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6791135125014666012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab362c176947896488d71bd608dc7530, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  snow:
+    upgradeCount: 0
+    upgradeCost: 0
+    snowballPrefab: {fileID: 7795113654954870273, guid: 99803938f2c922e4e97ee7184bdd84cd, type: 3}
+    size: {x: 0, y: 0}
+    damage: 0
+  yellowSnow:
+    upgradeCost: 0
+    upgradeCount: 0
+    yellowSnowballPrefab: {fileID: 7795113654954870273, guid: b4fb0568f239d5a438748192ef4c1ba4, type: 3}
+    damage: 0
+    damageOverTime: 0
+    damageTimeAmount: 0
+    cooldown: 0
+  slushPuddle:
+    upgradeCost: 0
+    upgradeCount: 0
+    slushPrefab: {fileID: 6791135125014666012}
+    size: {x: 0, y: 0, z: 0}
+    damageMultiplier: 1
+    slowdownFactor: 0.8
+    cooldown: 0
