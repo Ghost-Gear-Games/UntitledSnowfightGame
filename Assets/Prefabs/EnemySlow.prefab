@@ -164,8 +164,12 @@ MonoBehaviour:
   eDamage: 0
   drops: 0
   eHPSystem: {fileID: 5524658638846728804}
+  yellowed: 0
   slushed: 0
   lunchmoney: {fileID: 5286055719117215257, guid: a37ef30d6132bd34cb4230941b37e74c, type: 3}
+  eAtkMgr: {fileID: 0}
+  Regular: {fileID: 0}
+  HurtSprite: {fileID: 0}
 --- !u!114 &5524658638846728804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,7 +262,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.0496, y: 1.5744}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

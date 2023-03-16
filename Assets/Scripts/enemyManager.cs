@@ -13,24 +13,30 @@ public class enemyManager : MonoBehaviour
     public bool slushed = false;
     public GameObject lunchmoney;
     public attackManager eAtkMgr;
+
+    public Sprite Regular;
+    public Sprite HurtSprite;
+
+    public SpriteRenderer GFX;
     // Start is called before the first frame update
     void Start()
     {
-        if(eType == "EnemyFast")
+        GFX = this.gameObject.GetComponentInChildren<SpriteRenderer>();
+        if (eType == "Fast")
         {
-            eHPSystem.healthAmount = 5;
+            eHPSystem.healthAmount = 4f;
             eDamage = 12.5f;
             drops = 5;
         }
-        if (eType == "EnemyNormal")
+        if (eType == "Normal")
         {
             eHPSystem.healthAmount = 8f;
             eDamage = 25;
             drops = 10;
         }
-        if (eType == "EnemySlow")
+        if (eType == "Slow")
         {
-            eHPSystem.healthAmount = 12f;
+            eHPSystem.healthAmount = 16f;
             eDamage = 50;
             drops = 20;
         }
@@ -57,23 +63,26 @@ public class enemyManager : MonoBehaviour
                 {
                 case "Snowball":
                     Debug.Log("Confirmed it was a snowball");
-                    this.gameObject.GetComponent<healthSystem>().healthAmount -= slushed ? (eAtkMgr.snow.damage *  ((float)eAtkMgr.slushPuddle.damageMultiplier)) : eAtkMgr.snow.damage;
+
+                    StartCoroutine(HurtAnim());
+                    eHPSystem.healthAmount -= slushed ? (eAtkMgr.snow.damage * ((float)eAtkMgr.slushPuddle.damageMultiplier)) : eAtkMgr.snow.damage;
                     Destroy(collider.gameObject);
-                    if (!this.gameObject.GetComponent<healthSystem>().eCheckup())
+                    if (!eHPSystem.eCheckup())
                     {
                         Debug.Log("enemy failed checkup");
                         for (int i = 0; i <= (drops / 5); i++) 
                         {
                             Debug.Log("made coin");
-                            Instantiate(lunchmoney, this.transform.position + new Vector3(Random.Range(0.1f,0.3f), Random.Range(0.1f, 0.3f)), Quaternion.identity);
+                            Instantiate(lunchmoney, this.transform.position + new Vector3(Random.Range(-1f,1f), Random.Range(-1f, 1f)), Quaternion.identity);
                         }
                         Destroy(this.gameObject);
                     }
+
                     break;
                 case "YellowSnowball":
-                    this.gameObject.GetComponent<healthSystem>().healthAmount -= slushed ? (eAtkMgr.yellowSnow.damage * ((float)eAtkMgr.slushPuddle.damageMultiplier)) : eAtkMgr.yellowSnow.damage;
+                    eHPSystem.healthAmount -= slushed ? (eAtkMgr.yellowSnow.damage * ((float)eAtkMgr.slushPuddle.damageMultiplier)) : eAtkMgr.yellowSnow.damage;
                     yellowed = true;
-                    if (!this.gameObject.GetComponent<healthSystem>().eCheckup())
+                    if (!eHPSystem.eCheckup())
                     {
                         Debug.Log("enemy failed checkup");
                         for (int i = 0; i <= (drops / 5); i++)
@@ -104,10 +113,51 @@ public class enemyManager : MonoBehaviour
         for(int i = 0; i <= eAtkMgr.yellowSnow.damageTimeAmount; i++)
         {
             eHPSystem.healthAmount -= eAtkMgr.yellowSnow.damageOverTime;
+            if (!eHPSystem.eCheckup())
+            {
+                Debug.Log("enemy failed checkup");
+                for (int x = 0; x <= (drops / 5); x++)
+                {
+                    Debug.Log("made coin");
+                    Instantiate(lunchmoney, this.transform.position + new Vector3(Random.Range(0.1f, 0.3f), Random.Range(0.1f, 0.3f)), Quaternion.identity);
+                }
+                Destroy(this.gameObject);
+            }
             yield return new WaitForSeconds(1f);
         }
+
         yellowed = false;
         yield break;
     }
+    IEnumerator HurtAnim()
+    {
 
+        this.gameObject.GetComponent<AIPath>().maxSpeed = 0;
+        yield return new WaitForEndOfFrame();
+        for (int i = 0; i < 3; i++)
+        {
+            Debug.Log("ran HurtAnimloop" + i + "times");
+            GFX.enabled = true;
+            GFX.sprite = HurtSprite;
+            yield return new WaitForSeconds(0.25f);
+            GFX.enabled = false;
+            yield return new WaitForSeconds(0.25f);
+        }
+        GFX.sprite = Regular;
+        GFX.enabled = true;
+        switch (eType)
+        {
+            case "Normal":
+                this.gameObject.GetComponent<AIPath>().maxSpeed = 2;
+                break;
+            case "Slow":
+                this.gameObject.GetComponent<AIPath>().maxSpeed = 1;
+                break;
+            case "Fast":
+                this.gameObject.GetComponent<AIPath>().maxSpeed = 4;
+                break;
+        }
+        Debug.Log("put regular sprite back");
+        yield break;
+    }
 }

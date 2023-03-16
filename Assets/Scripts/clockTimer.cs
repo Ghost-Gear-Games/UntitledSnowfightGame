@@ -27,7 +27,7 @@ public class clockTimer : MonoBehaviour
 
 
             }
-            if (timerTime > timerDuration && CountUp)
+            if (timerTime > timerDuration && CountUp && timerOn)
             {
                 Debug.Log("turned off counting up timer due to its duration bieng met");
                 timerOn = false;
@@ -37,7 +37,7 @@ public class clockTimer : MonoBehaviour
                 Debug.Log("Counted down once");
                 timerTime -= Time.deltaTime;
             }
-            if(timerTime < timerDuration && !CountUp)
+            if(timerTime < timerDuration && !CountUp && timerOn)
             {
                 Debug.Log("turned off counting down timer due to its duration bieng met");
                 timerOn = false;

@@ -23,13 +23,15 @@ public class playerControl : MonoBehaviour
     public enum weapon { BASIC, YELLOW, SLUSH };
     public weapon currentWeapon;
 
-    public clockTimer.timer yellowSnowCooldown = new();
-    public clockTimer.timer slushLiftime = new();
-    public clockTimer.timer slushCooldown = new();
+    /*public clockTimer.timer yellowSnowCooldown;
+    public clockTimer.timer slushLiftime;
+    public clockTimer.timer slushCooldown;*/
 
     public int snowballSpeed;
 
     public int lunchMoneyTotal = 0;
+
+    public Animator animator;
 
     public void ChangeWeapon(int Weapon)
     {
@@ -60,10 +62,18 @@ public class playerControl : MonoBehaviour
         {
             this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
         }
+        if(moveInput != new Vector2(0,0))
+        {
+            animator.SetBool("moving", true);
+        }
+        else
+        {
+            animator.SetBool("moving", false);
+        }
         snowballDistance = new Vector3(0.1f + moveInput.x * 0.1f, 0.1f + moveInput.y * 0.1f, 0);
-        yellowSnowCooldown.CountTimer(false);
+       /* yellowSnowCooldown.CountTimer(false);
         slushLiftime.CountTimer(true);
-        slushCooldown.CountTimer(false);
+        slushCooldown.CountTimer(false);*/
     }
     //movement
     void FixedUpdate()
@@ -169,6 +179,11 @@ public class playerControl : MonoBehaviour
                     break;
 
             }
+        }
+        if(collider.tag == "Collectable")
+        {
+            lunchMoneyTotal += 1;
+            Destroy(collider.gameObject);
         }
         if (!temp.Checkup())
         {

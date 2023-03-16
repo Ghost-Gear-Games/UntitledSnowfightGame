@@ -15,7 +15,7 @@ public class waveControl : MonoBehaviour
     public waveState currentWaveState = waveState.waiting;
     public float spawnInterval = 1;
     public float waitTime;
-    public int currentWave = 0;
+    public int currentWave;
 
     public GameObject enemyN;
     public GameObject enemyF;
@@ -37,6 +37,10 @@ public class waveControl : MonoBehaviour
             slowerThanUpdateTimer = 1;
             if (GameObject.FindGameObjectWithTag("Enemy") == null)
             {
+                if (currentWaveState == waveState.waiting)
+                {
+                    StartCoroutine(waveSpawner(waveList[currentWave + 1]));
+                }
                 return false;
             }
 
@@ -45,6 +49,7 @@ public class waveControl : MonoBehaviour
     }
     void Start()
     {
+        currentWave = 0;
         waitTime = 5f;
         StartCoroutine(waveSpawner(waveList[currentWave]));
     }
@@ -52,6 +57,7 @@ public class waveControl : MonoBehaviour
     void Update()
     {
         enemiesAreAlive();
+
 
     }
     Transform Spawnpointer(float spawnpoint)
@@ -79,7 +85,8 @@ public class waveControl : MonoBehaviour
     }
     IEnumerator waveSpawner(wave wave_)
     {
-        int enemyCount = 0;
+        int enemyCount;
+        enemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
         if (currentWaveState == waveState.waiting)
         {
             if (!enemiesAreAlive())
@@ -88,30 +95,24 @@ public class waveControl : MonoBehaviour
                 yield return new WaitForSeconds(waitTime);
                 currentWaveState = waveState.spawning;
             }
+
         }
         if (currentWaveState == waveState.spawning)
         {
+
             Debug.Log("spawn the wave's enemies");
             foreach (GameObject enemy in waveList[currentWave].enemies)
             {
-                if (enemyCount < waveList[currentWave].enemies.Length)
-                {
                     Instantiate(waveList[currentWave].enemies[enemyCount], Spawnpointer(Random.Range(1, 5)));
                     enemyCount++;
                     Debug.Log("spawned enemy");
                     yield return new WaitForSeconds(1f / spawnInterval);
-                }
-                else
-                {
-                    Debug.Log("finished spawning");
-                    currentWave += 1;
-                    currentWaveState = waveState.waiting;
-                    yield break;
-                }
             }
-            currentWaveState = waveState.waiting;
-
         }
+        Debug.Log("finished spawning");
+        currentWaveState = waveState.waiting;
+        currentWave += 1;
+        yield break;
 
     }
 }

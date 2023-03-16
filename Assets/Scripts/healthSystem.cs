@@ -7,7 +7,7 @@ public class healthSystem : MonoBehaviour
 {
     public Image healthBar;
     public float healthAmount = 100;
-    private int pHealCount;
+    public int HealCount;
 
     private void Update()
     {
@@ -54,11 +54,11 @@ public class healthSystem : MonoBehaviour
     }
     public void handWarmer()
     {
-        if(this.gameObject.GetComponent<playerControl>().lunchMoneyTotal >= (10 * Mathf.Pow(2, pHealCount)))
+        if(this.gameObject.GetComponent<playerControl>().lunchMoneyTotal >= (10 * Mathf.Pow(2, HealCount)))
         {
             Thaw(25);
-            this.gameObject.GetComponent<playerControl>().lunchMoneyTotal -= (10 * ((int)Mathf.Pow(2, pHealCount)));
-            pHealCount++;
+            this.gameObject.GetComponent<playerControl>().lunchMoneyTotal -= (10 * ((int)Mathf.Pow(2, HealCount)));
+            HealCount++;
         }
 
     }

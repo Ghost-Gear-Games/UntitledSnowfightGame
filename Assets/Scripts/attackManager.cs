@@ -56,18 +56,12 @@ public class attackManager : MonoBehaviour
     }
     private void Update()
     {
-        switch (this.name)
-        {
-            case "Snowball":
-                snow.upgradeCost = 10 * ((int)Mathf.Pow(5, snow.upgradeCount + 1));
-                break;
-            case "YellowSnowball":
-                yellowSnow.upgradeCost = 10 * ((int)Mathf.Pow(7.5f, yellowSnow.upgradeCount + 1));
-                break;
-            case "Slush":
-                slushPuddle.upgradeCost = 10 * ((int)Mathf.Pow(10, slushPuddle.upgradeCount + 1));
-                break;
-        }
+        
+        snow.upgradeCost = 2 * ((int)Mathf.Pow(5, snow.upgradeCount + 1));
+        yellowSnow.upgradeCost = 2 * ((int)Mathf.Pow(7.5f, yellowSnow.upgradeCount + 1));
+        slushPuddle.upgradeCost = 2 * ((int)Mathf.Pow(10, slushPuddle.upgradeCount + 1));
+
+        
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
