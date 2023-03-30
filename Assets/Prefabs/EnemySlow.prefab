@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 6162967967538041313}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.07, y: -0.54, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 507094239879058998}
@@ -168,8 +168,9 @@ MonoBehaviour:
   slushed: 0
   lunchmoney: {fileID: 5286055719117215257, guid: a37ef30d6132bd34cb4230941b37e74c, type: 3}
   eAtkMgr: {fileID: 0}
-  Regular: {fileID: 0}
-  HurtSprite: {fileID: 0}
+  Regular: {fileID: 21300000, guid: f732b167c8f7e474bbe2d20990d1623d, type: 3}
+  HurtSprite: {fileID: 21300000, guid: 322ca33aee761fb4d9d838521ded03c5, type: 3}
+  GFX: {fileID: 0}
 --- !u!114 &5524658638846728804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,6 +185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthBar: {fileID: 0}
   healthAmount: 100
+  HealCount: 0
 --- !u!1 &6629347563764694837
 GameObject:
   m_ObjectHideFlags: 0

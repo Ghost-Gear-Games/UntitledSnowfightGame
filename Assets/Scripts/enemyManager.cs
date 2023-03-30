@@ -13,14 +13,17 @@ public class enemyManager : MonoBehaviour
     public bool slushed = false;
     public GameObject lunchmoney;
     public attackManager eAtkMgr;
-
+   
     public Sprite Regular;
     public Sprite HurtSprite;
 
     public SpriteRenderer GFX;
+
+    public AIPath pathfinding;
     // Start is called before the first frame update
     void Start()
     {
+        pathfinding = this.gameObject.GetComponent<AIPath>();
         GFX = this.gameObject.GetComponentInChildren<SpriteRenderer>();
         if (eType == "Fast")
         {
@@ -48,6 +51,14 @@ public class enemyManager : MonoBehaviour
         if (yellowed)
         {
             StartCoroutine(DamageOverTime());
+        }
+        if(pathfinding.destination.x > this.transform.position.x)
+        {
+            GFX.flipX = false;
+        }
+        if(pathfinding.destination.x < this.transform.position.x)
+        {
+            GFX.flipX = true;
         }
     }
 
@@ -131,8 +142,10 @@ public class enemyManager : MonoBehaviour
     }
     IEnumerator HurtAnim()
     {
-
-        this.gameObject.GetComponent<AIPath>().maxSpeed = 0;
+        if(eType != "Slow")
+        {
+            this.gameObject.GetComponent<AIPath>().maxSpeed = 0;
+        }
         yield return new WaitForEndOfFrame();
         for (int i = 0; i < 3; i++)
         {
@@ -149,9 +162,6 @@ public class enemyManager : MonoBehaviour
         {
             case "Normal":
                 this.gameObject.GetComponent<AIPath>().maxSpeed = 2;
-                break;
-            case "Slow":
-                this.gameObject.GetComponent<AIPath>().maxSpeed = 1;
                 break;
             case "Fast":
                 this.gameObject.GetComponent<AIPath>().maxSpeed = 4;

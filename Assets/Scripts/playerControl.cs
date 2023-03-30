@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class playerControl : MonoBehaviour
 {
@@ -33,6 +34,11 @@ public class playerControl : MonoBehaviour
 
     public Animator animator;
 
+    public Button yellowSnowButton;
+    public Button slushButton;
+
+    Vector3 lastPos;
+
     public void ChangeWeapon(int Weapon)
     {
         switch (Weapon)
@@ -49,8 +55,41 @@ public class playerControl : MonoBehaviour
         }
 
     }
+    public void UpgradeWeapon(string Weapon)
+    {
+        //PPS player playerControl SCript
+        Debug.Log("PPS ran upgrade weapon");
+        switch (Weapon)
+        {
+            case "base":
+                Debug.Log("PPS it was a base upgrade");
+                if(lunchMoneyTotal > snowball.upgradeCost)
+                {
+                    lunchMoneyTotal -= snowball.upgradeCost;
+                    snowball.upgradeCount++;
+                }
+                break;
+            case "yellow":
+                Debug.Log("PPS it was a yellow upgrade");
+                if (lunchMoneyTotal > yellowSnowball.upgradeCost)
+                {
+                    lunchMoneyTotal -= yellowSnowball.upgradeCost;
+                    yellowSnowball.upgradeCount++;
+                }
+                break;
+            case "slush":
+                Debug.Log("PPS it was a slush upgrade");
+                if (lunchMoneyTotal > slush.upgradeCost)
+                {
+                    lunchMoneyTotal -= slush.upgradeCost;
+                    slush.upgradeCount++;
+                }
+                break;
+        }
+    }
     void Update()
     {
+        lastPos = this.gameObject.transform.position;
         //updating movement input
         moveInput = move.ReadValue<Vector2>();
 
@@ -79,7 +118,14 @@ public class playerControl : MonoBehaviour
     void FixedUpdate()
     {
         rb2D.MovePosition(rb2D.position + speed * Time.fixedDeltaTime * moveInput);
-
+        if (yellowSnowball.upgradeCount >= 0)
+        {
+            yellowSnowButton.interactable = true;
+        }
+        if(slush.upgradeCount >= 0)
+        {
+            slushButton.interactable = true;
+        }
     }
     //input Control
     private void OnEnable()
@@ -95,7 +141,12 @@ public class playerControl : MonoBehaviour
         move.Disable();
         fire.Disable();
     }
-
+    private void Start()
+    {
+        snowball.upgradeCount = 0;
+        yellowSnowball.upgradeCount = -1;
+        slush.upgradeCount = -1;
+    }
     private void Awake()
     {
         playerControls = new PlayerActions();
@@ -120,9 +171,8 @@ public class playerControl : MonoBehaviour
                     Debug.Log("ran basic attack logic");
                     break;
                 case weapon.YELLOW:
-                    if (yellowSnowball.upgradeCount >= 0)
-                    {
                         var yellowSnowProjectile = Instantiate(yellowSnowball.yellowSnowballPrefab, this.transform);
+                        yellowSnowProjectile.name = yellowSnowball.yellowSnowballPrefab.name;
                         yellowSnowProjectile.transform.position = this.transform.position + snowballDistance;
                         var desiredDirY = this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX ? moveInput + new Vector2(Random.Range(-0.2f, -0.1f), 0) : moveInput + new Vector2(Random.Range(0.1f, 0.2f), 0);
                         var desiredVectorY = desiredDirY.normalized * snowballSpeed;
@@ -131,19 +181,14 @@ public class playerControl : MonoBehaviour
                         yAtkMgr.yellowSnow.damage = 3 + (yAtkMgr.yellowSnow.upgradeCount * 2);
                         yAtkMgr.yellowSnow.damageOverTime = 1 + (Mathf.Clamp(yAtkMgr.yellowSnow.upgradeCount * 1, 0, Mathf.Infinity));
                         yAtkMgr.yellowSnow.damageTimeAmount = 12 - (Mathf.Clamp(yAtkMgr.yellowSnow.upgradeCount * 2, 0, 4));
-                    }
-                    Debug.Log("ran yellow attack logic");
+                        Debug.Log("ran yellow attack logic");
                     break;
                 case weapon.SLUSH:
-                    if (slush.upgradeCount >= 0)
-                    {
-                        var slushPuddle = Instantiate(slush.slushPrefab, this.transform);
-                        slushPuddle.transform.position = this.transform.position;
-                        var sAtkMgr = slushPuddle.GetComponent<attackManager>();
-                        sAtkMgr.slushPuddle.size = new Vector3(1 * (sAtkMgr.slushPuddle.upgradeCount + 1), 1 * (sAtkMgr.slushPuddle.upgradeCount + 1), 0);
-                        sAtkMgr.slushPuddle.slowdownFactor = 1;
-                        sAtkMgr.slushPuddle.damageMultiplier = 1.2 + (sAtkMgr.slushPuddle.upgradeCount * 0.1);
-                    }
+                    var slushPuddle = Instantiate(slush.slushPrefab, lastPos, Quaternion.identity);
+                    var sAtkMgr = slushPuddle.GetComponent<attackManager>();
+                    sAtkMgr.slushPuddle.size = new Vector3(1 * (sAtkMgr.slushPuddle.upgradeCount + 1), 1 * (sAtkMgr.slushPuddle.upgradeCount + 1), 0);
+                    sAtkMgr.slushPuddle.slowdownFactor = 1;
+                    sAtkMgr.slushPuddle.damageMultiplier = 1.2 + (sAtkMgr.slushPuddle.upgradeCount * 0.1);
                     Debug.Log("ran slush attack logic");
                     break;
             }

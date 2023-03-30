@@ -61,6 +61,7 @@ public class attackManager : MonoBehaviour
         yellowSnow.upgradeCost = 2 * ((int)Mathf.Pow(7.5f, yellowSnow.upgradeCount + 1));
         slushPuddle.upgradeCost = 2 * ((int)Mathf.Pow(10, slushPuddle.upgradeCount + 1));
 
+
         
     }
     private void OnCollisionEnter2D(Collision2D collision)
