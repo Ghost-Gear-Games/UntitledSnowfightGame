@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class waveControl : MonoBehaviour
@@ -49,6 +50,7 @@ public class waveControl : MonoBehaviour
         currentWave = -1;
         waitTime = 3f;
         StartCoroutine(waveSpawner());
+
     }
 
     void Update()
@@ -84,24 +86,21 @@ public class waveControl : MonoBehaviour
     {
         while (!pauseMenu.GameIsPaused)
         {
-            if(currentWave >= 4)
-            {
                 GenerateWave();
-            }
             //GWS in debug log means Gamemaster Wave Script this helps filter the logs
-            Debug.Log("GWS ran coroutine wave spawner");
+          Debug.Log("GWS ran coroutine wave spawner");
             if (currentWaveState == waveState.waiting)
             {
-                Debug.Log("GWS We are in Waiting");
+              Debug.Log("GWS We are in Waiting");
                 if (!enemiesAreAlive())
                 {
-                    Debug.Log("GWS we waited and are now ready to spawn the next wave");
+                  Debug.Log("GWS we waited and are now ready to spawn the next wave");
                     currentWave += 1;
                     currentWaveState = waveState.spawning;
                 }
                 else
                 {
-                    Debug.Log("GWS Enemies alive and we wait");
+                  Debug.Log("GWS Enemies alive and we wait");
                     yield return new WaitForSeconds(1);
                 }
 
@@ -109,16 +108,16 @@ public class waveControl : MonoBehaviour
             if (currentWaveState == waveState.spawning)
             {
 
-                Debug.Log("GWS spawn the wave's enemies");
+              Debug.Log("GWS spawn the wave's enemies");
                 foreach (GameObject enemy in waveList[currentWave].enemies)
                 {
-                    Instantiate(waveList[currentWave].enemies[enemyCount], Spawnpointer(Random.Range(1, 5)));
-                    Debug.Log("GWS spawned enemy");
+                    Instantiate(waveList[currentWave].enemies[enemyCount], Spawnpointer(UnityEngine.Random.Range(1, 5)));
+                  Debug.Log("GWS spawned enemy");
                     yield return new WaitForSeconds(1f / spawnInterval);
                 }
             }
 
-            Debug.Log("GWS finished spawning");
+          Debug.Log("GWS finished spawning");
             currentWaveState = waveState.waiting;
         }
 
@@ -127,56 +126,79 @@ public class waveControl : MonoBehaviour
 
     void GenerateWave()
     {
+        Debug.Log("GWS generated wave function was ran");
         switch (currentWave)
         {
-            case 4:
-                switch (Random.Range(1, 4))
-                {
-                    case 1:
-                        waveList[currentWave].enemies = waveList[currentWave - 1].enemies;
-                        for (int y = 0; y < 2; y++)
-                        {
-                            waveList[currentWave].enemies[waveList[currentWave].enemies.Length + 1] = enemyN;
-                        }
-                        break;
-                    case 2:
-                        waveList[currentWave].enemies = waveList[currentWave - 1].enemies;
-                        for (int x = 0; x < 4; x++)
-                        {
-                            waveList[currentWave].enemies[waveList[currentWave].enemies.Length + 1] = enemyF;
-                        }
-                        break;
-                    case 3:
-                        waveList[currentWave].enemies = waveList[currentWave - 1].enemies;
-                        waveList[currentWave].enemies[waveList[currentWave].enemies.Length + 1] = enemyS;
-                        break;
-                }
-                break;
-            case >=5:
-                for(int i = 0; i < currentWave-4; i++) {
-                    switch (Random.Range(1, 4)) {
+            case >=3:
+                Debug.Log("GWS ran generate wave but current wave was >=5");
+                for (int i = 0; i < currentWave-2; i++) {
+                    switch (UnityEngine.Random.Range(1, 4)) {
                         case 1:
-                            waveList[currentWave].enemies = waveList[currentWave - 1].enemies;
-                            for(int y = 0; y < 2; y++)
-                            {
-                                waveList[currentWave].enemies[waveList[currentWave].enemies.Length + 1] = enemyN;
-                            }
+                            addEnemies4NextWave("N");
                             break;
                         case 2:
-                            waveList[currentWave].enemies = waveList[currentWave - 1].enemies;
-                            for(int x = 0; x < 4; x++) {
-                                waveList[currentWave].enemies[waveList[currentWave].enemies.Length + 1] = enemyF;
-                            }
+                            addEnemies4NextWave("F");
                             break;
                         case 3:
-                            waveList[currentWave].enemies = waveList[currentWave - 1].enemies;
-                            waveList[currentWave].enemies[waveList[currentWave].enemies.Length + 1] = enemyS;
+                            addEnemies4NextWave("S");
+                            break;
+                        default:
+                            addEnemies4NextWave("S");
                             break;
                     }
                 }
                 break;
+            default:
+                Debug.Log("EMS GWS ran generate wave but current wave was less than 3");
+                break;
 
         }
     }
+    void addEnemies4NextWave(string enemy)
+    {
+        //increase waveList size
+        //increase that waves enemy array to last waves enemy array size
+        //add last waves enemies to next wave
+
+        Array.Resize(ref waveList, currentWave + 1);
+        Array.Resize(ref waveList[currentWave + 1].enemies, waveList[currentWave + 1].enemies.Length + 1);
+        waveList[currentWave + 1].enemies = waveList[currentWave].enemies;
+        switch (enemy)
+        {
+            case "N":
+                //increase waveList.enemies size
+                Array.Resize<GameObject>(ref waveList[currentWave + 1].enemies, waveList[currentWave + 1].enemies.Length + 2);
+                for (int y = 0; y < 2; y++)
+                {
+                    //add enemy
+                    waveList[currentWave + 1].enemies[waveList[currentWave + 1].enemies.Length + 1] = enemyN;
+                    Debug.Log("EMS GWS added normal enemy to wave 4 enemy array");
+
+                }
+                break;
+            case "F":
+                Array.Resize<GameObject>(ref waveList[currentWave + 1].enemies, waveList[currentWave + 1].enemies.Length + 4);
+                for (int x = 0; x < 4; x++)
+                {
+                    //add enemy
+                    waveList[currentWave + 1].enemies[waveList[currentWave + 1].enemies.Length + 1] = enemyF;
+                    Debug.Log("EMS GWS added fast enemy to wave" + currentWave.ToString() + "'s enemy array");
+
+                }
+                break;
+            case "S":
+                Array.Resize<GameObject>(ref waveList[currentWave + 1].enemies, waveList[currentWave + 1].enemies.Length + 1);
+                //add enemy
+                waveList[currentWave + 1].enemies[waveList[currentWave + 1].enemies.Length + 1] = enemyS;
+                Debug.Log("EMS GWS added slow enemy to wave" + currentWave.ToString() + "'s enemy array");
+                break;
+            default:
+                Array.Resize<GameObject>(ref waveList[currentWave + 1].enemies, waveList[currentWave + 1].enemies.Length + 1);
+                //add enemy
+                waveList[currentWave + 1].enemies[waveList[currentWave + 1].enemies.Length + 1] = enemyS;
+                Debug.Log("EMS GWS added slow enemy to wave" + currentWave.ToString() + "'s enemy array");
+                break;
+        }
     
+    }
 }

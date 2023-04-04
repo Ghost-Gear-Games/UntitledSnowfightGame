@@ -38,11 +38,11 @@ public class textManager : MonoBehaviour
 
         waveCountText.text = "Wave #" + waveCntrl.currentWave.ToString();
 
-        snowballUpCost.text = "$" + atkMgr.snow.upgradeCost.ToString();
+        snowballUpCost.text ="Level:" + (playerCntrl.snowball.upgradeCount + 1) + " $" + playerCntrl.snowball.upgradeCost;
 
-        yellowSnowballUpCost.text = "$" + atkMgr.yellowSnow.upgradeCost.ToString();
+        yellowSnowballUpCost.text = "Level:" + (playerCntrl.yellowSnowball.upgradeCount + 1) + " $" + playerCntrl.yellowSnowball.upgradeCost;
 
-        slushUpCost.text = "$" + atkMgr.slushPuddle.upgradeCost.ToString();
+        slushUpCost.text = "Level:" + (playerCntrl.slush.upgradeCount + 1) + " $" + playerCntrl.slush.upgradeCost;
 
         healCost.text = "$" + (10 * Mathf.Pow(2, playerHPSystem.HealCount)).ToString();
     }

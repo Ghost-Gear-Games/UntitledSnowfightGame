@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class playerControl : MonoBehaviour
+public class playerControl : MonoBehaviour,IHasCooldown
 {
     public float speed = 5;
     public Vector3 snowballDistance;
@@ -24,10 +24,6 @@ public class playerControl : MonoBehaviour
     public enum weapon { BASIC, YELLOW, SLUSH };
     public weapon currentWeapon;
 
-    /*public clockTimer.timer yellowSnowCooldown;
-    public clockTimer.timer slushLiftime;
-    public clockTimer.timer slushCooldown;*/
-
     public int snowballSpeed;
 
     public int lunchMoneyTotal = 0;
@@ -38,6 +34,13 @@ public class playerControl : MonoBehaviour
     public Button slushButton;
 
     Vector3 lastPos;
+
+    [Header("Cooldown Section")]
+    [SerializeField] private cooldownSystem cooldownSystm;
+    [SerializeField] private int id = 1;
+    [SerializeField] private float cooldownDuration = 3;
+    public int Id => id;
+    public float CooldownDuration => cooldownDuration;
 
     public void ChangeWeapon(int Weapon)
     {
@@ -110,9 +113,14 @@ public class playerControl : MonoBehaviour
             animator.SetBool("moving", false);
         }
         snowballDistance = new Vector3(0.1f + moveInput.x * 0.1f, 0.1f + moveInput.y * 0.1f, 0);
-       /* yellowSnowCooldown.CountTimer(false);
-        slushLiftime.CountTimer(true);
-        slushCooldown.CountTimer(false);*/
+        /* yellowSnowCooldown.CountTimer(false);
+         slushLiftime.CountTimer(true);
+         slushCooldown.CountTimer(false);*/
+
+        snowball.upgradeCost = 2 * ((int)Mathf.Pow(2, snowball.upgradeCount + 1));
+        yellowSnowball.upgradeCost = 3 * ((int)Mathf.Pow(2, yellowSnowball.upgradeCount + 1)) + 2;
+        slush.upgradeCost = 4 * ((int)Mathf.Pow(2, slush.upgradeCount + 1)) + 5;
+
     }
     //movement
     void FixedUpdate()
@@ -141,14 +149,11 @@ public class playerControl : MonoBehaviour
         move.Disable();
         fire.Disable();
     }
-    private void Start()
+    private void Awake()
     {
         snowball.upgradeCount = 0;
         yellowSnowball.upgradeCount = -1;
         slush.upgradeCount = -1;
-    }
-    private void Awake()
-    {
         playerControls = new PlayerActions();
     }
     //attack logic
@@ -162,34 +167,42 @@ public class playerControl : MonoBehaviour
                     var snowballProjectile = Instantiate(snowball.snowballPrefab, this.transform);
                     snowballProjectile.name = snowball.snowballPrefab.name;
                     snowballProjectile.transform.localScale = 0.5f * new Vector3(((float)context.duration), ((float)context.duration));
-                    var desiredDir = this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX? moveInput + new Vector2(Random.Range(-0.2f, -0.1f), 0) : moveInput + new Vector2(Random.Range(0.1f, 0.2f), 0);
+                    var desiredDir = this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX? moveInput + new Vector2(UnityEngine.Random.Range(-0.2f, -0.1f), 0) : moveInput + new Vector2(UnityEngine.Random.Range(0.1f, 0.2f), 0);
                     var desiredVector = desiredDir.normalized * snowballSpeed;
                     var atkMgr = snowballProjectile.GetComponent<attackManager>();
                     atkMgr.snow.size = snowballProjectile.transform.localScale;
                     atkMgr.snow.damage = (snowballProjectile.transform.localScale.x * 2) + (atkMgr.snow.upgradeCount * 5);
                     snowballProjectile.GetComponent<Rigidbody2D>().velocity = desiredVector;
-                    Debug.Log("ran basic attack logic");
+                    Debug.Log("PPS ran basic attack logic");
                     break;
                 case weapon.YELLOW:
-                        var yellowSnowProjectile = Instantiate(yellowSnowball.yellowSnowballPrefab, this.transform);
-                        yellowSnowProjectile.name = yellowSnowball.yellowSnowballPrefab.name;
-                        yellowSnowProjectile.transform.position = this.transform.position + snowballDistance;
-                        var desiredDirY = this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX ? moveInput + new Vector2(Random.Range(-0.2f, -0.1f), 0) : moveInput + new Vector2(Random.Range(0.1f, 0.2f), 0);
-                        var desiredVectorY = desiredDirY.normalized * snowballSpeed;
-                        yellowSnowProjectile.GetComponent<Rigidbody2D>().velocity = desiredVectorY;
-                        var yAtkMgr = yellowSnowProjectile.GetComponent<attackManager>();
-                        yAtkMgr.yellowSnow.damage = 3 + (yAtkMgr.yellowSnow.upgradeCount * 2);
-                        yAtkMgr.yellowSnow.damageOverTime = 1 + (Mathf.Clamp(yAtkMgr.yellowSnow.upgradeCount * 1, 0, Mathf.Infinity));
-                        yAtkMgr.yellowSnow.damageTimeAmount = 12 - (Mathf.Clamp(yAtkMgr.yellowSnow.upgradeCount * 2, 0, 4));
-                        Debug.Log("ran yellow attack logic");
+                    if (cooldownSystm.isOnCooldown(id)) 
+                    { 
+                        return;
+                    }
+                    var yellowSnowProjectile = Instantiate(yellowSnowball.yellowSnowballPrefab, this.transform);
+                    yellowSnowProjectile.name = yellowSnowball.yellowSnowballPrefab.name;
+                    yellowSnowProjectile.transform.position = this.transform.position + snowballDistance;
+                    var desiredDirY = this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX ? moveInput + new Vector2(UnityEngine.Random.Range(-0.2f, -0.1f), 0) : moveInput + new Vector2(UnityEngine.Random.Range(0.1f, 0.2f), 0);
+                    var desiredVectorY = desiredDirY.normalized * snowballSpeed;
+                    yellowSnowProjectile.GetComponent<Rigidbody2D>().velocity = desiredVectorY;
+                    var yAtkMgr = yellowSnowProjectile.GetComponent<attackManager>();
+                    yAtkMgr.yellowSnow.damage = 3 + (yAtkMgr.yellowSnow.upgradeCount * 2);
+                    yAtkMgr.yellowSnow.damageOverTime = 1 + (Mathf.Clamp(yAtkMgr.yellowSnow.upgradeCount * 1, 0, Mathf.Infinity));
+                    yAtkMgr.yellowSnow.damageTimeAmount = 12 - (Mathf.Clamp(yAtkMgr.yellowSnow.upgradeCount * 2, 0, 4));
+                    Debug.Log("PPS ran yellow attack logic");
                     break;
                 case weapon.SLUSH:
+                    if (cooldownSystm.isOnCooldown(id)) 
+                    {
+                        return;
+                    }
                     var slushPuddle = Instantiate(slush.slushPrefab, lastPos, Quaternion.identity);
                     var sAtkMgr = slushPuddle.GetComponent<attackManager>();
                     sAtkMgr.slushPuddle.size = new Vector3(1 * (sAtkMgr.slushPuddle.upgradeCount + 1), 1 * (sAtkMgr.slushPuddle.upgradeCount + 1), 0);
                     sAtkMgr.slushPuddle.slowdownFactor = 1;
                     sAtkMgr.slushPuddle.damageMultiplier = 1.2 + (sAtkMgr.slushPuddle.upgradeCount * 0.1);
-                    Debug.Log("ran slush attack logic");
+                    Debug.Log("PPS ran slush attack logic");
                     break;
             }
         }
@@ -200,25 +213,25 @@ public class playerControl : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        Debug.Log("entered Trigger collison");
+        Debug.Log("PPS entered Trigger collison");
         var temp = this.GetComponent<healthSystem>();
         if (collider.tag == "Enemy")
         {
-            Debug.Log("collider is an ememy");
+            Debug.Log("PPS collider is an ememy");
             switch (collider.GetComponent<enemyManager>().eType)
             {
                 case "Normal":
                         StartCoroutine(HurtAnim());
                         temp.Freeze(50);
-                        Debug.Log("collider is enemy normal");
+                        Debug.Log("PPS collider is enemy normal");
                     break;
                 case "Fast":
-                    Debug.Log("collider is enemy fast");
+                    Debug.Log("PPS collider is enemy fast");
                     StartCoroutine(HurtAnim());
                     temp.Freeze(25);
                     break;
                 case "Slow":
-                    Debug.Log("collider is enemy slow");
+                    Debug.Log("PPS collider is enemy slow");
                     StartCoroutine(HurtAnim());
                     temp.Freeze(75);
                     break;
@@ -232,7 +245,7 @@ public class playerControl : MonoBehaviour
         }
         if (!temp.Checkup())
         {
-            Debug.Log("gameOver");
+            Debug.Log("PPSgameOver");
             //gameOver
         }
     }
@@ -244,7 +257,7 @@ public class playerControl : MonoBehaviour
         yield return new WaitForEndOfFrame();
         for(int i = 0; i < 3; i++)
         {
-            Debug.Log("ran HurtAnimloop" + i + "times");
+            Debug.Log("PPS ran HurtAnimloop" + i + "times");
             GFX.enabled = true;
             GFX.sprite = HurtSprite;
             yield return new WaitForSeconds(0.25f);
@@ -253,7 +266,7 @@ public class playerControl : MonoBehaviour
         }
         GFX.sprite = Regular;
         GFX.enabled = true;
-        Debug.Log("put regular sprite back");
+        Debug.Log("PPS put regular sprite back");
         yield break;
     }
     

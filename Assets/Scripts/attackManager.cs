@@ -56,19 +56,14 @@ public class attackManager : MonoBehaviour
     }
     private void Update()
     {
-        
-        snow.upgradeCost = 2 * ((int)Mathf.Pow(5, snow.upgradeCount + 1));
-        yellowSnow.upgradeCost = 2 * ((int)Mathf.Pow(7.5f, yellowSnow.upgradeCount + 1));
-        slushPuddle.upgradeCost = 2 * ((int)Mathf.Pow(10, slushPuddle.upgradeCount + 1));
 
 
-        
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(this.gameObject.tag == "playerAttack" && collision.collider.gameObject.layer == 3 && this.gameObject != slushPuddle.slushPrefab)
         {
-            Debug.Log("attack collided with edge of screen");
+            Debug.Log("EMS attack collided with edge of screen");
             Destroy(this.gameObject);
         }
     }
