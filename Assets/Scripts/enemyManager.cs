@@ -60,10 +60,7 @@ public class enemyManager : MonoBehaviour
         {
             GFX.flipX = true;
         }
-        if (slushed)
-        {
-            this.gameObject.GetComponent<AIPath>().maxSpeed *= eAtkMgr.slushPuddle.slowdownFactor;
-        }
+
     }
 
 
@@ -83,38 +80,36 @@ public class enemyManager : MonoBehaviour
                     StartCoroutine(HurtAnim());
                     eHPSystem.healthAmount -= slushed ? (eAtkMgr.snow.damage * ((float)eAtkMgr.slushPuddle.damageMultiplier)) : eAtkMgr.snow.damage;
                     Destroy(collider.gameObject);
-                    if (!eHPSystem.eCheckup())
-                    {
-                        Debug.Log("EMS enemy failed checkup");
-                        for (int i = 0; i <= (drops / 5); i++) 
-                        {
-                            Debug.Log("EMS made coin");
-                            Instantiate(lunchmoney, this.transform.position + new Vector3(UnityEngine.Random.Range(-1f,1f), UnityEngine.Random.Range(-1f, 1f)), Quaternion.identity);
-                        }
-                        Destroy(this.gameObject);
-                    }
-
+                    enemyDeath();
                     break;
                 case "YellowSnowball":
-                    Debug.Log("EMS Confirmed it was a snowball");
+                    Debug.Log("EMS Confirmed it was a yellow snowball");
                     eHPSystem.healthAmount -= slushed ? (eAtkMgr.yellowSnow.damage * ((float)eAtkMgr.slushPuddle.damageMultiplier)) : eAtkMgr.yellowSnow.damage;
                     yellowed = true;
-                    if (!eHPSystem.eCheckup())
-                    {
-                        Debug.Log("EMS enemy failed checkup");
-                        for (int i = 0; i <= (drops / 5); i++)
-                        {
-                            Debug.Log("EMS made coin");
-                            Instantiate(lunchmoney, this.transform.position + new Vector3(UnityEngine.Random.Range(0.1f, 0.3f), UnityEngine.Random.Range(0.1f, 0.3f)), Quaternion.identity);
-                        }
-                        Destroy(this.gameObject);
-                    }
+                    Destroy(collider.gameObject);
+                    enemyDeath();
                     break;
                 case "Slush":
+                    Debug.Log("EMS slushed Enemy");
                     slushed = true;
+                    this.gameObject.GetComponent<AIPath>().maxSpeed *= eAtkMgr.slushPuddle.slowdownFactor;
                     break;
                 }
 
+        }
+
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        eAtkMgr = collision.GetComponent<attackManager>();
+        if (slushed)
+        {
+            Debug.Log("EMS slowed enemy");
+            GFX.color += Color.blue;
+        }
+        if(collision.name == "Slush")
+        {
+            slushed = true;
         }
     }
     private void OnTriggerExit2D(Collider2D collider)
@@ -122,6 +117,7 @@ public class enemyManager : MonoBehaviour
         if(collider.tag == "playerAttack" && collider.name == "Slush")
         {
             slushed = false;
+            GFX.color -= Color.blue;
             switch (eType)
             {
                 case "Normal":
@@ -138,9 +134,13 @@ public class enemyManager : MonoBehaviour
     }
     IEnumerator DamageOverTime()
     {
+        Debug.Log("EMS ran Dmg/Time Coroutine");
+        GFX.color = new Color(255,255,200);
         for(int i = 0; i <= eAtkMgr.yellowSnow.damageTimeAmount; i++)
         {
+            Debug.Log("EMS ran Dmg/Time hurt loop" + i.ToString() + "times");
             eHPSystem.healthAmount -= eAtkMgr.yellowSnow.damageOverTime;
+
             if (!eHPSystem.eCheckup())
             {
                 Debug.Log("EMS enemy failed checkup");
@@ -151,9 +151,9 @@ public class enemyManager : MonoBehaviour
                 }
                 Destroy(this.gameObject);
             }
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
         }
-
+        GFX.color = Color.white;
         yellowed = false;
         yield break;
     }
@@ -186,5 +186,18 @@ public class enemyManager : MonoBehaviour
         }
         Debug.Log("EMS put regular sprite back");
         yield break;
+    }
+    void enemyDeath()
+    {
+        if (!eHPSystem.eCheckup())
+        {
+            Debug.Log("EMS enemy failed checkup");
+            for (int i = 0; i <= (drops / 5); i++)
+            {
+                Debug.Log("EMS made coin");
+                Instantiate(lunchmoney, this.transform.position + new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f)), Quaternion.identity);
+            }
+            Destroy(this.gameObject);
+        }
     }
 }

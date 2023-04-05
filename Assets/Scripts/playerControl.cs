@@ -42,6 +42,12 @@ public class playerControl : MonoBehaviour,IHasCooldown
     public int Id => id;
     public float CooldownDuration => cooldownDuration;
 
+    public Image baseUpSprite;
+    public Image yellowUpSprite;
+    public Image slushUpSprite;
+
+    public GameObject GameOverUI;
+
     public void ChangeWeapon(int Weapon)
     {
         switch (Weapon)
@@ -71,6 +77,13 @@ public class playerControl : MonoBehaviour,IHasCooldown
                     lunchMoneyTotal -= snowball.upgradeCost;
                     snowball.upgradeCount++;
                 }
+                else
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        RWColorBlink(baseUpSprite);
+                    }
+                }
                 break;
             case "yellow":
                 Debug.Log("PPS it was a yellow upgrade");
@@ -78,6 +91,12 @@ public class playerControl : MonoBehaviour,IHasCooldown
                 {
                     lunchMoneyTotal -= yellowSnowball.upgradeCost;
                     yellowSnowball.upgradeCount++;
+                }
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        RWColorBlink(yellowUpSprite);
+                    }
                 }
                 break;
             case "slush":
@@ -87,11 +106,27 @@ public class playerControl : MonoBehaviour,IHasCooldown
                     lunchMoneyTotal -= slush.upgradeCost;
                     slush.upgradeCount++;
                 }
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        RWColorBlink(slushUpSprite);
+                    }
+                }
                 break;
         }
     }
+
     void Update()
     {
+        var temp = this.GetComponent<healthSystem>();
+        if (!temp.Checkup())
+        {
+            Debug.Log("PPSgameOver");
+            //gameOver'
+            GameOverUI.SetActive(true);
+            Time.timeScale = 0f;
+        }
+
         lastPos = this.gameObject.transform.position;
         //updating movement input
         moveInput = move.ReadValue<Vector2>();
@@ -178,7 +213,7 @@ public class playerControl : MonoBehaviour,IHasCooldown
                 case weapon.YELLOW:
                     if (cooldownSystm.isOnCooldown(id)) 
                     { 
-                        return;
+                        break;
                     }
                     var yellowSnowProjectile = Instantiate(yellowSnowball.yellowSnowballPrefab, this.transform);
                     yellowSnowProjectile.name = yellowSnowball.yellowSnowballPrefab.name;
@@ -187,7 +222,7 @@ public class playerControl : MonoBehaviour,IHasCooldown
                     var desiredVectorY = desiredDirY.normalized * snowballSpeed;
                     yellowSnowProjectile.GetComponent<Rigidbody2D>().velocity = desiredVectorY;
                     var yAtkMgr = yellowSnowProjectile.GetComponent<attackManager>();
-                    yAtkMgr.yellowSnow.damage = 3 + (yAtkMgr.yellowSnow.upgradeCount * 2);
+                    yAtkMgr.yellowSnow.damage = 1 + (yAtkMgr.yellowSnow.upgradeCount * 2);
                     yAtkMgr.yellowSnow.damageOverTime = 1 + (Mathf.Clamp(yAtkMgr.yellowSnow.upgradeCount * 1, 0, Mathf.Infinity));
                     yAtkMgr.yellowSnow.damageTimeAmount = 12 - (Mathf.Clamp(yAtkMgr.yellowSnow.upgradeCount * 2, 0, 4));
                     Debug.Log("PPS ran yellow attack logic");
@@ -195,12 +230,13 @@ public class playerControl : MonoBehaviour,IHasCooldown
                 case weapon.SLUSH:
                     if (cooldownSystm.isOnCooldown(id)) 
                     {
-                        return;
+                        break;
                     }
                     var slushPuddle = Instantiate(slush.slushPrefab, lastPos, Quaternion.identity);
+                    slushPuddle.name = slush.slushPrefab.name;
                     var sAtkMgr = slushPuddle.GetComponent<attackManager>();
                     sAtkMgr.slushPuddle.size = new Vector3(1 * (sAtkMgr.slushPuddle.upgradeCount + 1), 1 * (sAtkMgr.slushPuddle.upgradeCount + 1), 0);
-                    sAtkMgr.slushPuddle.slowdownFactor = 1;
+                    sAtkMgr.slushPuddle.slowdownFactor = 0.65f;
                     sAtkMgr.slushPuddle.damageMultiplier = 1.2 + (sAtkMgr.slushPuddle.upgradeCount * 0.1);
                     Debug.Log("PPS ran slush attack logic");
                     break;
@@ -246,10 +282,12 @@ public class playerControl : MonoBehaviour,IHasCooldown
         if (!temp.Checkup())
         {
             Debug.Log("PPSgameOver");
-            //gameOver
+            //gameOver'
+            GameOverUI.SetActive(true);
+            Time.timeScale = 0f;
         }
     }
-    
+
     IEnumerator HurtAnim()
     {
 
@@ -269,6 +307,12 @@ public class playerControl : MonoBehaviour,IHasCooldown
         Debug.Log("PPS put regular sprite back");
         yield break;
     }
-    
+    IEnumerator RWColorBlink(Image image)
+    {
+        image.color = Color.red;
+        yield return new WaitForSeconds(0.25f);
+        image.color = Color.white;
+        yield break;
+    }
 
 }

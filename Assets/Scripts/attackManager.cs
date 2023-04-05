@@ -22,7 +22,6 @@ public class attackManager : MonoBehaviour
         public float damage;
         public float damageOverTime;
         public float damageTimeAmount;
-        public float cooldown;
     };
     [System.Serializable]
     public class slush
@@ -33,7 +32,6 @@ public class attackManager : MonoBehaviour
         public Vector3 size;
         public double damageMultiplier = 1;
         public float slowdownFactor = 0.8f;
-        public float cooldown;
     };
     public snowball snow;
     public yellowSnowball yellowSnow;
@@ -63,7 +61,7 @@ public class attackManager : MonoBehaviour
     {
         if(this.gameObject.tag == "playerAttack" && collision.collider.gameObject.layer == 3 && this.gameObject != slushPuddle.slushPrefab)
         {
-            Debug.Log("EMS attack collided with edge of screen");
+            Debug.Log("attack collided with edge of screen");
             Destroy(this.gameObject);
         }
     }

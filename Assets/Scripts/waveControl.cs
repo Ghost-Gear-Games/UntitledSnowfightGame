@@ -9,7 +9,7 @@ public class waveControl : MonoBehaviour
     public class wave
     {
 
-        public GameObject[] enemies;
+        public List<GameObject> enemies;
 
     }
     public enum waveState { waiting, spawning }
@@ -21,7 +21,7 @@ public class waveControl : MonoBehaviour
     public GameObject enemyN;
     public GameObject enemyF;
     public GameObject enemyS;
-    public wave[] waveList = new wave[] { };
+    public List<wave> waveList;
 
     public float slowerThanUpdateTimer = 1;
     public Transform spawnpoint1;
@@ -30,8 +30,6 @@ public class waveControl : MonoBehaviour
     public Transform spawnpoint4;
 
     int enemyCount;
-
-
 
     bool enemiesAreAlive()
     {
@@ -86,7 +84,6 @@ public class waveControl : MonoBehaviour
     {
         while (!pauseMenu.GameIsPaused)
         {
-                GenerateWave();
             //GWS in debug log means Gamemaster Wave Script this helps filter the logs
           Debug.Log("GWS ran coroutine wave spawner");
             if (currentWaveState == waveState.waiting)
@@ -109,10 +106,14 @@ public class waveControl : MonoBehaviour
             {
 
               Debug.Log("GWS spawn the wave's enemies");
+                if (currentWave > 3)
+                {
+                    waveList.Add(GenerateWave());
+                }
                 foreach (GameObject enemy in waveList[currentWave].enemies)
                 {
                     Instantiate(waveList[currentWave].enemies[enemyCount], Spawnpointer(UnityEngine.Random.Range(1, 5)));
-                  Debug.Log("GWS spawned enemy");
+                    Debug.Log("GWS spawned enemy");
                     yield return new WaitForSeconds(1f / spawnInterval);
                 }
             }
@@ -123,14 +124,14 @@ public class waveControl : MonoBehaviour
 
 
     }
-
+    /*
     void GenerateWave()
     {
         Debug.Log("GWS generated wave function was ran");
         switch (currentWave)
         {
             case >=3:
-                Debug.Log("GWS ran generate wave but current wave was >=5");
+                Debug.Log("GWS ran generate wave but current wave was >=3");
                 for (int i = 0; i < currentWave-2; i++) {
                     switch (UnityEngine.Random.Range(1, 4)) {
                         case 1:
@@ -149,56 +150,98 @@ public class waveControl : MonoBehaviour
                 }
                 break;
             default:
-                Debug.Log("EMS GWS ran generate wave but current wave was less than 3");
+                Debug.Log("GWS ran generate wave but current wave was less than 3");
                 break;
 
         }
     }
     void addEnemies4NextWave(string enemy)
     {
-        //increase waveList size
-        //increase that waves enemy array to last waves enemy array size
         //add last waves enemies to next wave
-
-        Array.Resize(ref waveList, currentWave + 1);
-        Array.Resize(ref waveList[currentWave + 1].enemies, waveList[currentWave + 1].enemies.Length + 1);
-        waveList[currentWave + 1].enemies = waveList[currentWave].enemies;
+        waveList.Add(Emptywave);
+        waveList[currentWave + 1].enemies.AddRange(waveList[currentWave].enemies);
         switch (enemy)
         {
             case "N":
                 //increase waveList.enemies size
-                Array.Resize<GameObject>(ref waveList[currentWave + 1].enemies, waveList[currentWave + 1].enemies.Length + 2);
                 for (int y = 0; y < 2; y++)
                 {
                     //add enemy
-                    waveList[currentWave + 1].enemies[waveList[currentWave + 1].enemies.Length + 1] = enemyN;
-                    Debug.Log("EMS GWS added normal enemy to wave 4 enemy array");
+                    waveList[currentWave + 1].enemies.Add(enemyN);
+                    Debug.Log("GWS added normal enemy to wave" + (currentWave + 1).ToString() + "enemy array");
 
                 }
                 break;
             case "F":
-                Array.Resize<GameObject>(ref waveList[currentWave + 1].enemies, waveList[currentWave + 1].enemies.Length + 4);
                 for (int x = 0; x < 4; x++)
                 {
                     //add enemy
-                    waveList[currentWave + 1].enemies[waveList[currentWave + 1].enemies.Length + 1] = enemyF;
-                    Debug.Log("EMS GWS added fast enemy to wave" + currentWave.ToString() + "'s enemy array");
+                    waveList[currentWave + 1].enemies.Add(enemyF);
+                    Debug.Log("GWS added fast enemy to wave" + currentWave.ToString() + "'s enemy array");
 
                 }
                 break;
             case "S":
-                Array.Resize<GameObject>(ref waveList[currentWave + 1].enemies, waveList[currentWave + 1].enemies.Length + 1);
                 //add enemy
-                waveList[currentWave + 1].enemies[waveList[currentWave + 1].enemies.Length + 1] = enemyS;
-                Debug.Log("EMS GWS added slow enemy to wave" + currentWave.ToString() + "'s enemy array");
+                waveList[currentWave + 1].enemies.Add(enemyS);
+                Debug.Log("GWS added slow enemy to wave" + currentWave.ToString() + "'s enemy array");
                 break;
             default:
-                Array.Resize<GameObject>(ref waveList[currentWave + 1].enemies, waveList[currentWave + 1].enemies.Length + 1);
                 //add enemy
-                waveList[currentWave + 1].enemies[waveList[currentWave + 1].enemies.Length + 1] = enemyS;
-                Debug.Log("EMS GWS added slow enemy to wave" + currentWave.ToString() + "'s enemy array");
+                waveList[currentWave + 1].enemies.Add(enemyS);
+                Debug.Log("GWS added slow enemy to wave" + currentWave.ToString() + "'s enemy array");
                 break;
         }
     
+    }*/
+    wave GenerateWave()
+    {
+        wave ReturnedWave = currentWave == 3 ? waveList[3] : waveList[currentWave-2];
+        for (int i = 0; i < currentWave-2; i++)
+        {
+            switch (UnityEngine.Random.Range(1, 4))
+            {
+                case 1:
+                    ReturnedWave.enemies.AddRange(RandomEnemyAdd("N"));
+                    break;
+                case 2:
+                    ReturnedWave.enemies.AddRange(RandomEnemyAdd("F"));
+                    break;
+                case 3:
+                    ReturnedWave.enemies.AddRange(RandomEnemyAdd("S"));
+                    break;
+            }
+        }
+        return ReturnedWave;
+    }
+    List<GameObject> RandomEnemyAdd(string Ecode)
+    {
+        List<GameObject> ReturnedObjects = new();
+        switch (Ecode)
+        {
+            case "N":
+                for (int y = 0; y < 2; y++)
+                {
+                    ReturnedObjects.Add(enemyN);
+                }
+                break;
+            case "F":
+                for (int x = 0; x < 4; x++)
+                {
+                    //add enemy
+                    ReturnedObjects.Add(enemyF);
+
+                }
+                break;
+            case "S":
+                //add enemy
+                ReturnedObjects.Add(enemyS);
+                break;
+            default:
+                //add enemy
+                ReturnedObjects.Add(enemyS);
+                break;
+        }
+        return ReturnedObjects;
     }
 }
