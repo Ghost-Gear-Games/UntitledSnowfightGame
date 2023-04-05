@@ -2523,10 +2523,10 @@ MonoBehaviour:
   cooldownSystm: {fileID: 958443456}
   id: 1
   cooldownDuration: 3
-  baseUpSprite: {fileID: 0}
-  yellowUpSprite: {fileID: 0}
-  slushUpSprite: {fileID: 0}
-  GameOverUI: {fileID: 0}
+  baseUpSprite: {fileID: 319394045}
+  yellowUpSprite: {fileID: 151179153}
+  slushUpSprite: {fileID: 713370944}
+  GameOverUI: {fileID: 2043963482}
 --- !u!61 &958443453
 BoxCollider2D:
   m_ObjectHideFlags: 0
