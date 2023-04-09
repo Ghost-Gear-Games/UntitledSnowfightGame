@@ -48,6 +48,8 @@ public class playerControl : MonoBehaviour,IHasCooldown
 
     public GameObject GameOverUI;
 
+    public Vector3 mousePos;
+
     public void ChangeWeapon(int Weapon)
     {
         switch (Weapon)
@@ -155,6 +157,7 @@ public class playerControl : MonoBehaviour,IHasCooldown
         snowball.upgradeCost = 2 * ((int)Mathf.Pow(2, snowball.upgradeCount + 1));
         yellowSnowball.upgradeCost = 3 * ((int)Mathf.Pow(2, yellowSnowball.upgradeCount + 1)) + 2;
         slush.upgradeCost = 4 * ((int)Mathf.Pow(2, slush.upgradeCount + 1)) + 5;
+        mousePos = Input.mousePosition;
 
     }
     //movement
@@ -202,8 +205,10 @@ public class playerControl : MonoBehaviour,IHasCooldown
                     var snowballProjectile = Instantiate(snowball.snowballPrefab, this.transform);
                     snowballProjectile.name = snowball.snowballPrefab.name;
                     snowballProjectile.transform.localScale = 0.5f * new Vector3(((float)context.duration), ((float)context.duration));
-                    var desiredDir = this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX? moveInput + new Vector2(UnityEngine.Random.Range(-0.2f, -0.1f), 0) : moveInput + new Vector2(UnityEngine.Random.Range(0.1f, 0.2f), 0);
+                    //var desiredDir = this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX? moveInput + new Vector2(UnityEngine.Random.Range(-0.2f, -0.1f), 0) : moveInput + new Vector2(UnityEngine.Random.Range(0.1f, 0.2f), 0);
+                    var desiredDir = (mousePos - this.gameObject.transform.position);
                     var desiredVector = desiredDir.normalized * snowballSpeed;
+                    Debug.DrawLine(this.transform.position, desiredVector, Color.red, Mathf.Infinity );
                     var atkMgr = snowballProjectile.GetComponent<attackManager>();
                     atkMgr.snow.size = snowballProjectile.transform.localScale;
                     atkMgr.snow.damage = (snowballProjectile.transform.localScale.x * 2) + (atkMgr.snow.upgradeCount * 5);
@@ -218,7 +223,7 @@ public class playerControl : MonoBehaviour,IHasCooldown
                     var yellowSnowProjectile = Instantiate(yellowSnowball.yellowSnowballPrefab, this.transform);
                     yellowSnowProjectile.name = yellowSnowball.yellowSnowballPrefab.name;
                     yellowSnowProjectile.transform.position = this.transform.position + snowballDistance;
-                    var desiredDirY = this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX ? moveInput + new Vector2(UnityEngine.Random.Range(-0.2f, -0.1f), 0) : moveInput + new Vector2(UnityEngine.Random.Range(0.1f, 0.2f), 0);
+                    var desiredDirY = (mousePos - this.transform.position);
                     var desiredVectorY = desiredDirY.normalized * snowballSpeed;
                     yellowSnowProjectile.GetComponent<Rigidbody2D>().velocity = desiredVectorY;
                     var yAtkMgr = yellowSnowProjectile.GetComponent<attackManager>();
@@ -292,6 +297,8 @@ public class playerControl : MonoBehaviour,IHasCooldown
     {
 
         var GFX = this.gameObject.GetComponentInChildren<SpriteRenderer>();
+        var Hurtbox = this.gameObject.GetComponent<BoxCollider2D>();
+        Hurtbox.enabled = false;
         yield return new WaitForEndOfFrame();
         for(int i = 0; i < 3; i++)
         {
@@ -304,6 +311,7 @@ public class playerControl : MonoBehaviour,IHasCooldown
         }
         GFX.sprite = Regular;
         GFX.enabled = true;
+        Hurtbox.enabled = true;
         Debug.Log("PPS put regular sprite back");
         yield break;
     }

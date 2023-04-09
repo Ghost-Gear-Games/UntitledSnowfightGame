@@ -814,7 +814,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -100, y: 0}
+  m_AnchoredPosition: {x: -76.25, y: -41.5}
   m_SizeDelta: {x: 130, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &183457394
@@ -1654,7 +1654,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -100, y: 0}
+  m_AnchoredPosition: {x: -76.25, y: -41.5}
   m_SizeDelta: {x: 130, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &603915858
@@ -2527,6 +2527,7 @@ MonoBehaviour:
   yellowUpSprite: {fileID: 151179153}
   slushUpSprite: {fileID: 713370944}
   GameOverUI: {fileID: 2043963482}
+  mousePos: {x: 0, y: 0, z: 0}
 --- !u!61 &958443453
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3075,10 +3076,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1920407176}
-        m_TargetAssemblyTypeName: buttonManager, Assembly-CSharp
-        m_MethodName: Sceneswitch
-        m_Mode: 5
+      - m_Target: {fileID: 1494005541}
+        m_TargetAssemblyTypeName: pauseMenu, Assembly-CSharp
+        m_MethodName: LoadMenu
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3943,10 +3944,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1920407176}
-        m_TargetAssemblyTypeName: buttonManager, Assembly-CSharp
-        m_MethodName: Sceneswitch
-        m_Mode: 5
+      - m_Target: {fileID: 1494005541}
+        m_TargetAssemblyTypeName: pauseMenu, Assembly-CSharp
+        m_MethodName: LoadMenu
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4322,10 +4323,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1920407176}
-        m_TargetAssemblyTypeName: buttonManager, Assembly-CSharp
-        m_MethodName: Sceneswitch
-        m_Mode: 5
+      - m_Target: {fileID: 1494005541}
+        m_TargetAssemblyTypeName: pauseMenu, Assembly-CSharp
+        m_MethodName: LoadCredits
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4410,8 +4411,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -300.00006, y: 200}
-  m_SizeDelta: {x: -599.9999, y: -400}
+  m_AnchoredPosition: {x: -323.75003, y: 241.5}
+  m_SizeDelta: {x: -647.5, y: -483}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1780599696
 MonoBehaviour:
@@ -5220,7 +5221,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 100.00006, y: 0}
+  m_AnchoredPosition: {x: 123.75, y: -41.5}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2133639924
@@ -5277,7 +5278,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0

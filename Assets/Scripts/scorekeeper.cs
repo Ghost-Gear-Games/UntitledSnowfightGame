@@ -15,8 +15,8 @@ public class scorekeeper : MonoBehaviour
         int score = 0;
         score += plyrCntrl.lunchMoneyTotal;
         score += (plyrCntrl.snowball.upgradeCount * 5);
-        score += (plyrCntrl.yellowSnowball.upgradeCount * 10);
-        score += (plyrCntrl.slush.upgradeCount * 15);
+        score += plyrCntrl.yellowSnowball.upgradeCount != -1 ? (plyrCntrl.yellowSnowball.upgradeCount * 10) : 0;
+        score += plyrCntrl.slush.upgradeCount != -1 ? (plyrCntrl.slush.upgradeCount * 15) : 0;
         score -= (hpSys.HealCount * 5);
         score += (waveCntrl.currentWave * 15);
         return score;

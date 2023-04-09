@@ -9,7 +9,6 @@ public class enemyManager : MonoBehaviour
     public float eDamage;
     public int drops;
     public healthSystem eHPSystem;
-    public bool yellowed = false;
     public bool slushed = false;
     public GameObject lunchmoney;
     public attackManager eAtkMgr;
@@ -48,10 +47,6 @@ public class enemyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (yellowed)
-        {
-            StartCoroutine(DamageOverTime());
-        }
         if(pathfinding.destination.x > this.transform.position.x)
         {
             GFX.flipX = false;
@@ -85,7 +80,7 @@ public class enemyManager : MonoBehaviour
                 case "YellowSnowball":
                     Debug.Log("EMS Confirmed it was a yellow snowball");
                     eHPSystem.healthAmount -= slushed ? (eAtkMgr.yellowSnow.damage * ((float)eAtkMgr.slushPuddle.damageMultiplier)) : eAtkMgr.yellowSnow.damage;
-                    yellowed = true;
+                    StartCoroutine(DamageOverTime());
                     Destroy(collider.gameObject);
                     enemyDeath();
                     break;
@@ -117,7 +112,7 @@ public class enemyManager : MonoBehaviour
         if(collider.tag == "playerAttack" && collider.name == "Slush")
         {
             slushed = false;
-            GFX.color -= Color.blue;
+            GFX.color -= Color.blue * 2;
             switch (eType)
             {
                 case "Normal":
@@ -154,7 +149,6 @@ public class enemyManager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
         GFX.color = Color.white;
-        yellowed = false;
         yield break;
     }
     IEnumerator HurtAnim()

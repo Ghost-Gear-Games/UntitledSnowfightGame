@@ -48,7 +48,7 @@ public class waveControl : MonoBehaviour
         currentWave = -1;
         waitTime = 3f;
         StartCoroutine(waveSpawner());
-
+        pauseMenu.GameIsPaused = false;
     }
 
     void Update()

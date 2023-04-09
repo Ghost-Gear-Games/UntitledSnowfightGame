@@ -5,10 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class pauseMenu : MonoBehaviour
 {
-    public static bool GameIsPaused = false;
+
 
     public GameObject pauseMenuUI;
-
+    public static bool GameIsPaused;
     // Update is called once per frame
     void Update()
     {
@@ -23,6 +23,10 @@ public class pauseMenu : MonoBehaviour
                 Pause();
             }
         }
+    }
+    private void Start()
+    {
+        GameIsPaused = false;
     }
     public void Resume()
     {
@@ -41,12 +45,14 @@ public class pauseMenu : MonoBehaviour
     public void LoadMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Menu");
+        GameIsPaused = false;
+        SceneManager.LoadScene("TitleScreen");
     }
 
-    public void QuitGame()
+    public void LoadCredits()
     {
-        Debug.Log("Quitting game...");
-        Application.Quit();
+        Time.timeScale = 1f;
+        GameIsPaused=false;
+        SceneManager.LoadScene("Credits");
     }
 }
