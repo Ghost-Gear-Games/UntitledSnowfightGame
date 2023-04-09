@@ -20,7 +20,7 @@
                     "id": "f2b379f1-c129-40ea-83de-b18dd243a453",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Hold(duration=0.4),Hold",
+                    "interactions": "Hold(duration=5),Hold(duration=4.75),Hold(duration=4.5),Hold(duration=4.25),Hold(duration=4),Hold(duration=3.75),Hold(duration=3.5),Hold(duration=3.25),Hold(duration=3),Hold(duration=2.75),Hold(duration=2.5),Hold(duration=2.25),Hold(duration=2),Hold(duration=1.75),Hold(duration=1.5),Hold(duration=1.25),Hold(duration=1),Hold(duration=0.75),Hold(duration=0.5)",
                     "initialStateCheck": false
                 }
             ],
