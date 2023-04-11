@@ -130,7 +130,7 @@ public class enemyManager : MonoBehaviour
     IEnumerator DamageOverTime()
     {
         Debug.Log("EMS ran Dmg/Time Coroutine");
-        GFX.color = new Color(255,255,200);
+        GFX.color = new Color(255,255,100);
         for(int i = 0; i <= eAtkMgr.yellowSnow.damageTimeAmount; i++)
         {
             Debug.Log("EMS ran Dmg/Time hurt loop" + i.ToString() + "times");

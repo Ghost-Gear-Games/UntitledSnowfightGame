@@ -164,13 +164,13 @@ MonoBehaviour:
   eDamage: 0
   drops: 0
   eHPSystem: {fileID: -5104385418024639772}
-  yellowed: 0
   slushed: 0
   lunchmoney: {fileID: 5286055719117215257, guid: a37ef30d6132bd34cb4230941b37e74c, type: 3}
   eAtkMgr: {fileID: 0}
   Regular: {fileID: 21300000, guid: 74a683bbfba271e4dbe00ef33a8d7a2e, type: 3}
   HurtSprite: {fileID: 21300000, guid: 8b04aed27c8296d4c947ca42aaf5f3a3, type: 3}
   GFX: {fileID: 0}
+  pathfinding: {fileID: 0}
 --- !u!114 &-5104385418024639772
 MonoBehaviour:
   m_ObjectHideFlags: 0

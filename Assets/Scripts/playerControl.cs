@@ -157,7 +157,7 @@ public class playerControl : MonoBehaviour,IHasCooldown
         snowball.upgradeCost = 2 * ((int)Mathf.Pow(2, snowball.upgradeCount + 1));
         yellowSnowball.upgradeCost = 3 * ((int)Mathf.Pow(2, yellowSnowball.upgradeCount + 1)) + 2;
         slush.upgradeCost = 4 * ((int)Mathf.Pow(2, slush.upgradeCount + 1)) + 5;
-        mousePos = Input.mousePosition;
+        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
     }
     //movement
@@ -206,9 +206,8 @@ public class playerControl : MonoBehaviour,IHasCooldown
                     snowballProjectile.name = snowball.snowballPrefab.name;
                     snowballProjectile.transform.localScale = 0.5f * new Vector3(((float)context.duration), ((float)context.duration));
                     //var desiredDir = this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX? moveInput + new Vector2(UnityEngine.Random.Range(-0.2f, -0.1f), 0) : moveInput + new Vector2(UnityEngine.Random.Range(0.1f, 0.2f), 0);
-                    var desiredDir = (mousePos - this.gameObject.transform.position);
+                    var desiredDir = (mousePos - transform.position);
                     var desiredVector = desiredDir.normalized * snowballSpeed;
-                    Debug.DrawLine(this.transform.position, desiredVector, Color.red, Mathf.Infinity );
                     var atkMgr = snowballProjectile.GetComponent<attackManager>();
                     atkMgr.snow.size = snowballProjectile.transform.localScale;
                     atkMgr.snow.damage = (snowballProjectile.transform.localScale.x * 2) + (atkMgr.snow.upgradeCount * 5);
